@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Submit Assignment | VeriText</title>
+
+
+    <!-- GOOGLE FONT -->
+
+    <link
+        rel="preconnect"
+        href="https://fonts.googleapis.com"
+    >
+
+    <link
+        rel="preconnect"
+        href="https://fonts.gstatic.com"
+        crossorigin
+    >
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet"
+    >
+
+
+    <!-- CSS -->
+
+    <link
+        rel="stylesheet"
+        href="css/style.css"
+    >
+
+</head>
+
+
+<body>
+
+
+<!-- =====================================
+     NAVBAR
+===================================== -->
+
+<header class="navbar">
+
+    <div class="nav-container">
+
+
+        <!-- LOGO -->
+
+        <a
+            href="index.html"
+            class="logo"
+        >
+
+            <span class="logo-icon">
+                ✓
+            </span>
+
+            <span>
+                Veri<span class="logo-blue">Text</span>
+            </span>
+
+        </a>
+
+
+        <!-- NAVIGATION -->
+
+        <nav class="nav-links">
+
+            <a href="index.html">
+                Home
+            </a>
+
+            <a href="index.html#how-it-works">
+                How it works
+            </a>
+
+            <a href="index.html#features">
+                Features
+            </a>
+
+        </nav>
+
+
+        <!-- NAV ACTIONS -->
+
+        <div class="nav-actions">
+
+            <a
+                href="#"
+                id="studentLogout"
+                class="login-btn"
+            >
+                Logout
+            </a>
+
+
+            <a
+                href="student.html"
+                class="nav-cta"
+            >
+                Student Portal
+            </a>
+
+        </div>
+
+    </div>
+
+</header>
+
+
+
+<!-- =====================================
+     MAIN
+===================================== -->
+
+<main class="submission-page">
+
+    <div class="submission-container">
+
+
+        <!-- =====================================
+             PAGE HEADER
+        ====================================== -->
+
+        <div class="submission-header">
+
+            <span class="section-tag">
+                STUDENT PORTAL
+            </span>
+
+            <h1>
+                Submit your assignment
+            </h1>
+
+            <p>
+                Enter your assignment code and submit
+                your answers for similarity analysis.
+            </p>
+
+        </div>
+
+
+
+        <!-- =====================================
+             FORM CARD
+        ====================================== -->
+
+        <div class="submission-card">
+
+            <form id="submissionForm">
+
+
+                <!-- =====================================
+                     STUDENT DETAILS
+                ====================================== -->
+
+                <div class="form-section">
+
+                    <div class="form-section-title">
+
+                        <span>
+                            01
+                        </span>
+
+                        <div>
+
+                            <h2>
+                                Student details
+                            </h2>
+
+                            <p>
+                                Your account details are
+                                automatically loaded.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+
+                    <div class="form-grid">
+
+
+                        <!-- NAME -->
+
+                        <div class="form-group">
+
+                            <label for="studentName">
+                                Full name
+                            </label>
+
+                            <input
+                                type="text"
+                                id="studentName"
+                                placeholder="Loading..."
+                                autocomplete="name"
+                                readonly
+                                required
+                            >
+
+                        </div>
+
+
+
+                        <!-- STUDENT ID -->
+
+                        <div class="form-group">
+
+                            <label for="studentId">
+                                Student ID
+                            </label>
+
+                            <input
+                                type="text"
+                                id="studentId"
+                                placeholder="Loading..."
+                                readonly
+                                required
+                            >
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- =====================================
+                     ASSIGNMENT DETAILS
+                ====================================== -->
+
+                <div class="form-section">
+
+                    <div class="form-section-title">
+
+                        <span>
+                            02
+                        </span>
+
+                        <div>
+
+                            <h2>
+                                Assignment
+                            </h2>
+
+                            <p>
+                                Enter the assignment code
+                                provided by your instructor.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+
+                    <!-- ASSIGNMENT CODE -->
+
+                    <div class="form-group">
+
+                        <label for="assignmentCode">
+                            Assignment code
+                        </label>
+
+                        <input
+                            type="text"
+                            id="assignmentCode"
+                            placeholder="e.g. VT-A3K9P2"
+                            autocomplete="off"
+                            required
+                        >
+
+                        <small>
+                            Your instructor should provide
+                            this code.
+                        </small>
+
+                    </div>
+
+
+
+                    <!-- =====================================
+                         QUESTIONS
+                    ====================================== -->
+
+                    <div
+                        id="questionsContainer"
+                        class="questions-container"
+                    >
+
+                        <div class="question-box">
+
+                            <span class="question-label">
+                                ASSIGNMENT QUESTIONS
+                            </span>
+
+                            <p>
+                                Enter your assignment code
+                                to view the questions.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- =====================================
+                     NOTICE
+                ====================================== -->
+
+                <div class="submission-notice">
+
+                    <div class="notice-icon">
+                        i
+                    </div>
+
+                    <div>
+
+                        <strong>
+                            Before you submit
+                        </strong>
+
+                        <p>
+                            Your answers will be analyzed
+                            for similarity with other
+                            submissions for this assignment.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- =====================================
+                     SUBMIT
+                ====================================== -->
+
+                <div class="submit-area">
+
+                    <button
+                        type="submit"
+                        class="primary-btn submit-btn"
+                    >
+
+                        Submit Assignment
+
+                        <span>
+                            →
+                        </span>
+
+                    </button>
+
+                </div>
+
+
+            </form>
+
+        </div>
+
+    </div>
+
+</main>
+
+
+
+<!-- =====================================
+     JAVASCRIPT
+===================================== -->
+
+<script src="js/student.js"></script>
+
+</body>
+
+</html>
