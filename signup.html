@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Create Instructor Account | VeriText</title>
+
+
+    <!-- GOOGLE FONT -->
+
+    <link
+        rel="preconnect"
+        href="https://fonts.googleapis.com"
+    >
+
+    <link
+        rel="preconnect"
+        href="https://fonts.gstatic.com"
+        crossorigin
+    >
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet"
+    >
+
+
+    <!-- MAIN CSS -->
+
+    <link
+        rel="stylesheet"
+        href="css/style.css"
+    >
+
+</head>
+
+
+<body>
+
+
+<!-- =====================================
+     NAVBAR
+===================================== -->
+
+<header class="navbar">
+
+    <div class="nav-container">
+
+
+        <!-- LOGO -->
+
+        <a
+            href="index.html"
+            class="logo"
+        >
+
+            <span class="logo-icon">
+                ✓
+            </span>
+
+            <span>
+                Veri<span class="logo-blue">Text</span>
+            </span>
+
+        </a>
+
+
+        <!-- NAVIGATION -->
+
+        <nav class="nav-links">
+
+            <a href="index.html">
+                Home
+            </a>
+
+        </nav>
+
+
+    </div>
+
+</header>
+
+
+
+<!-- =====================================
+     SIGNUP PAGE
+===================================== -->
+
+<main class="auth-page">
+
+    <div class="auth-container">
+
+
+        <!-- =================================
+             HEADER
+        ================================== -->
+
+        <div class="auth-header">
+
+            <span class="section-tag">
+                INSTRUCTOR PORTAL
+            </span>
+
+            <h1>
+                Create your account
+            </h1>
+
+            <p>
+                Set up your instructor account to start
+                managing assignments.
+            </p>
+
+        </div>
+
+
+
+        <!-- =================================
+             SIGNUP CARD
+        ================================== -->
+
+        <div class="auth-card">
+
+            <form id="signupForm">
+
+
+                <!-- =================================
+                     FULL NAME
+                ================================== -->
+
+                <div class="form-group">
+
+                    <label for="signupName">
+                        Full name
+                    </label>
+
+                    <input
+                        type="text"
+                        id="signupName"
+                        placeholder="e.g. Aarti Thakur"
+                        autocomplete="name"
+                        required
+                    >
+
+                </div>
+
+
+
+                <!-- =================================
+                     EMAIL
+                ================================== -->
+
+                <div class="form-group">
+
+                    <label for="signupEmail">
+                        Email address
+                    </label>
+
+                    <input
+                        type="email"
+                        id="signupEmail"
+                        placeholder="instructor@example.com"
+                        autocomplete="email"
+                        required
+                    >
+
+                </div>
+
+
+
+                <!-- =================================
+                     PASSWORD
+                ================================== -->
+
+                <div class="form-group">
+
+                    <label for="signupPassword">
+                        Password
+                    </label>
+
+                    <input
+                        type="password"
+                        id="signupPassword"
+                        placeholder="Create a password"
+                        minlength="6"
+                        autocomplete="new-password"
+                        required
+                    >
+
+                </div>
+
+
+
+                <!-- =================================
+                     CONFIRM PASSWORD
+                ================================== -->
+
+                <div class="form-group">
+
+                    <label for="confirmPassword">
+                        Confirm password
+                    </label>
+
+                    <input
+                        type="password"
+                        id="confirmPassword"
+                        placeholder="Enter password again"
+                        minlength="6"
+                        autocomplete="new-password"
+                        required
+                    >
+
+                </div>
+
+
+
+                <!-- =================================
+                     ERROR / SUCCESS MESSAGE
+                ================================== -->
+
+                <div
+                    id="signupError"
+                    class="auth-message"
+                    aria-live="polite"
+                ></div>
+
+
+
+                <!-- =================================
+                     CREATE ACCOUNT BUTTON
+                ================================== -->
+
+                <button
+                    type="submit"
+                    class="primary-btn auth-submit"
+                >
+
+                    Create account
+
+                    <span>
+                        →
+                    </span>
+
+                </button>
+
+
+            </form>
+
+
+
+            <!-- =================================
+                 LOGIN FOOTER
+            ================================== -->
+
+            <div class="auth-footer">
+
+                <p>
+                    Already have an account?
+                </p>
+
+                <a href="login.html">
+                    Log in
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</main>
+
+
+
+<!-- =====================================
+     JAVASCRIPT
+===================================== -->
+
+<script src="js/signup.js"></script>
+
+
+</body>
+
+</html>
