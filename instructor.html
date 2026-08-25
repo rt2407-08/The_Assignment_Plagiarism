@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Instructor Dashboard | VeriText</title>
+
+
+    <!-- GOOGLE FONT -->
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+
+    <link
+        rel="preconnect"
+        href="https://fonts.gstatic.com"
+        crossorigin
+    >
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet"
+    >
+
+
+    <!-- CSS -->
+
+    <link
+        rel="stylesheet"
+        href="css/style.css"
+    >
+
+</head>
+
+
+<body>
+
+
+<!-- =====================================
+     NAVBAR
+===================================== -->
+
+<header class="navbar">
+
+    <div class="nav-container">
+
+
+        <!-- LOGO -->
+
+        <a
+            href="index.html"
+            class="logo"
+        >
+
+            <span class="logo-icon">
+                ✓
+            </span>
+
+            <span>
+                Veri<span class="logo-blue">Text</span>
+            </span>
+
+        </a>
+
+
+        <!-- NAVIGATION -->
+
+        <nav class="nav-links">
+
+            <a href="index.html">
+                Home
+            </a>
+
+            <a href="index.html#how-it-works">
+                How it works
+            </a>
+
+            <a href="index.html#features">
+                Features
+            </a>
+
+        </nav>
+
+
+        <!-- USER -->
+
+        <div class="nav-actions">
+
+            <span
+                id="instructorName"
+                class="instructor-name"
+            >
+                Instructor
+            </span>
+
+            <button
+                type="button"
+                class="nav-cta"
+                id="logoutBtn"
+            >
+                Log out
+            </button>
+
+        </div>
+
+    </div>
+
+</header>
+
+
+
+<!-- =====================================
+     MAIN DASHBOARD
+===================================== -->
+
+<main class="instructor-page">
+
+    <div class="instructor-container">
+
+
+        <!-- PAGE HEADER -->
+
+        <div class="instructor-header">
+
+            <div>
+
+                <span class="section-tag">
+                    INSTRUCTOR PORTAL
+                </span>
+
+                <h1>
+                    Dashboard
+                </h1>
+
+                <p>
+                    Create assignments, manage submissions,
+                    and review similarity results.
+                </p>
+
+            </div>
+
+
+            <button
+                type="button"
+                class="primary-btn"
+                id="openCreateBtn"
+            >
+                + Create Assignment
+            </button>
+
+        </div>
+
+
+
+        <!-- =====================================
+             STAT CARDS
+        ====================================== -->
+
+        <div class="instructor-stats">
+
+
+            <!-- ASSIGNMENTS -->
+
+            <div class="instructor-stat-card">
+
+                <div class="stat-card-top">
+
+                    <span>
+                        ASSIGNMENTS
+                    </span>
+
+                    <div class="dashboard-stat-icon">
+                        #
+                    </div>
+
+                </div>
+
+                <strong id="assignmentCount">
+                    0
+                </strong>
+
+                <p>
+                    Created assignments
+                </p>
+
+            </div>
+
+
+
+            <!-- SUBMISSIONS -->
+
+            <div class="instructor-stat-card">
+
+                <div class="stat-card-top">
+
+                    <span>
+                        SUBMISSIONS
+                    </span>
+
+                    <div class="dashboard-stat-icon">
+                        ↓
+                    </div>
+
+                </div>
+
+                <strong id="submissionCount">
+                    0
+                </strong>
+
+                <p>
+                    Student submissions
+                </p>
+
+            </div>
+
+
+
+            <!-- FLAGGED -->
+
+            <div class="instructor-stat-card">
+
+                <div class="stat-card-top">
+
+                    <span>
+                        FLAGGED
+                    </span>
+
+                    <div class="dashboard-stat-icon flagged-icon">
+                        !
+                    </div>
+
+                </div>
+
+                <strong id="flaggedCount">
+                    0
+                </strong>
+
+                <p>
+                    High similarity pairs
+                </p>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- =====================================
+             ASSIGNMENTS
+        ====================================== -->
+
+        <section class="assignments-section">
+
+
+            <div class="section-heading-row">
+
+                <div>
+
+                    <h2>
+                        Your assignments
+                    </h2>
+
+                    <p>
+                        Manage your assignments and view submissions.
+                    </p>
+
+                </div>
+
+
+                <button
+                    type="button"
+                    class="text-button"
+                    id="openCreateBtn2"
+                >
+                    + New assignment
+                </button>
+
+            </div>
+
+
+
+            <!-- EMPTY STATE -->
+
+            <div
+                class="empty-state"
+                id="emptyState"
+            >
+
+                <div class="empty-icon">
+                    +
+                </div>
+
+                <h3>
+                    No assignments yet
+                </h3>
+
+                <p>
+                    Create your first assignment to start
+                    collecting student submissions.
+                </p>
+
+                <button
+                    type="button"
+                    class="secondary-btn"
+                    id="emptyCreateBtn"
+                >
+                    Create your first assignment
+                </button>
+
+            </div>
+
+
+
+            <!-- ASSIGNMENT LIST -->
+
+            <div
+                class="assignment-list"
+                id="assignmentList"
+            >
+            </div>
+
+        </section>
+
+    </div>
+
+</main>
+
+
+
+<!-- =====================================
+     CREATE ASSIGNMENT MODAL
+===================================== -->
+
+<div
+    class="modal-overlay"
+    id="createModal"
+>
+
+    <div class="modal">
+
+
+        <!-- MODAL HEADER -->
+
+        <div class="modal-header">
+
+            <div>
+
+                <span class="section-tag">
+                    NEW ASSIGNMENT
+                </span>
+
+                <h2>
+                    Create assignment
+                </h2>
+
+                <p>
+                    Add as many questions as you need.
+                    Each question can be text-based or coding-based.
+                </p>
+
+            </div>
+
+
+            <button
+                type="button"
+                class="close-modal"
+                id="closeModalBtn"
+            >
+                ×
+            </button>
+
+        </div>
+
+
+
+        <!-- FORM -->
+
+        <form id="assignmentForm">
+
+
+            <!-- =================================
+                 ASSIGNMENT TITLE
+            ================================== -->
+
+            <div class="form-group">
+
+                <label for="assignmentTitle">
+                    Assignment title
+                </label>
+
+                <input
+                    type="text"
+                    id="assignmentTitle"
+                    placeholder="e.g. Mid Semester Assignment"
+                    required
+                >
+
+            </div>
+
+
+
+            <!-- =================================
+                 NUMBER OF QUESTIONS
+            ================================== -->
+
+            <div class="form-group">
+
+                <label for="questionCount">
+                    Number of questions
+                </label>
+
+                <input
+                    type="number"
+                    id="questionCount"
+                    min="1"
+                    max="100"
+                    step="1"
+                    value="1"
+                    required
+                >
+
+                <small>
+                    Enter how many questions you want to include.
+                    Each question can have a different type.
+                </small>
+
+            </div>
+
+
+
+            <!-- =================================
+                 QUESTIONS
+            ================================== -->
+
+            <div class="form-group">
+
+                <label>
+                    Assignment questions
+                </label>
+
+                <div id="questionsContainer">
+                    <!-- Questions generated by instructor.js -->
+                </div>
+
+            </div>
+
+
+
+            <!-- =================================
+                 RESPONSE LIMITS
+            ================================== -->
+
+            <div class="form-grid">
+
+
+                <!-- MINIMUM -->
+
+                <div class="form-group">
+
+                    <label
+                        for="minWords"
+                        id="minWordsLabel"
+                    >
+                        Minimum words
+                    </label>
+
+                    <input
+                        type="number"
+                        id="minWords"
+                        min="0"
+                        max="10000"
+                        value="0"
+                        placeholder="0"
+                        required
+                    >
+
+                </div>
+
+
+
+                <!-- MAXIMUM -->
+
+                <div class="form-group">
+
+                    <label
+                        for="maxWords"
+                        id="maxWordsLabel"
+                    >
+                        Maximum words
+                    </label>
+
+                    <input
+                        type="number"
+                        id="maxWords"
+                        min="1"
+                        max="10000"
+                        value="1000"
+                        placeholder="1000"
+                        required
+                    >
+
+                </div>
+
+            </div>
+
+
+
+            <!-- =================================
+                 FORM ACTIONS
+            ================================== -->
+
+            <div class="modal-actions">
+
+                <button
+                    type="button"
+                    class="cancel-btn"
+                    id="cancelBtn"
+                >
+                    Cancel
+                </button>
+
+
+                <button
+                    type="submit"
+                    class="primary-btn"
+                >
+                    Create Assignment
+                    <span>→</span>
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+
+
+<!-- =====================================
+     SUCCESS MODAL
+===================================== -->
+
+<div
+    class="modal-overlay"
+    id="successModal"
+>
+
+    <div class="success-modal">
+
+
+        <div class="success-icon">
+            ✓
+        </div>
+
+
+        <span class="section-tag">
+            ASSIGNMENT CREATED
+        </span>
+
+
+        <h2>
+            Your assignment is ready
+        </h2>
+
+
+        <p>
+            Share the assignment code below
+            with your students.
+        </p>
+
+
+
+        <!-- ASSIGNMENT CODE -->
+
+        <div class="assignment-code-box">
+
+            <span>
+                ASSIGNMENT CODE
+            </span>
+
+            <strong id="generatedCode">
+                VT-XXXXXX
+            </strong>
+
+        </div>
+
+
+
+        <button
+            type="button"
+            class="primary-btn"
+            id="successDoneBtn"
+        >
+            Done
+        </button>
+
+    </div>
+
+</div>
+
+
+
+<!-- =====================================
+     JAVASCRIPT
+===================================== -->
+
+<script src="js/similarity.js"></script>
+
+<script src="js/instructor.js"></script>
+
+
+</body>
+
+</html>
