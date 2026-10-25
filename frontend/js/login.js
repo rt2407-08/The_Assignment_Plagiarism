@@ -1,7 +1,8 @@
 // =====================================
-// VERITEXT INSTRUCTOR LOGIN
+// VERITEXT INSTRUCTOR LOGIN (MONGODB)
 // =====================================
 
+const API_BASE_URL = "https://veritext-backend-oe56.onrender.com/api";
 
 // =====================================
 // LOGIN ELEMENTS
@@ -21,62 +22,6 @@ const loginError =
 
 
 // =====================================
-// GET ALL INSTRUCTORS
-// =====================================
-
-function getInstructors() {
-
-    try {
-
-        const storedInstructors =
-            localStorage.getItem(
-                "veritext_instructors"
-            );
-
-
-        if (!storedInstructors) {
-
-            return [];
-
-        }
-
-
-        const instructors =
-            JSON.parse(
-                storedInstructors
-            );
-
-
-        // Safety check
-
-        if (
-            !Array.isArray(instructors)
-        ) {
-
-            return [];
-
-        }
-
-
-        return instructors;
-
-    }
-
-    catch (error) {
-
-        console.error(
-            "Could not load instructor accounts:",
-            error
-        );
-
-        return [];
-
-    }
-
-}
-
-
-// =====================================
 // SHOW MESSAGE
 // =====================================
 
@@ -84,6 +29,8 @@ function showLoginMessage(
     message,
     type = "error"
 ) {
+
+    if (!loginError) return;
 
     loginError.textContent =
         message;
@@ -96,213 +43,105 @@ function showLoginMessage(
 
 
 // =====================================
-// LOGIN
+// LOGIN SUBMIT
 // =====================================
 
-loginForm.addEventListener(
-    "submit",
-    function (event) {
+if (loginForm) {
 
-        event.preventDefault();
+    loginForm.addEventListener(
+        "submit",
+        async function (event) {
 
+            event.preventDefault();
 
-        // =================================
-        // CLEAR OLD MESSAGE
-        // =================================
+            // Clear old message
+            showLoginMessage("", "");
 
-        showLoginMessage(
-            "",
-            ""
-        );
+            const email =
+                loginEmail
+                    ? loginEmail.value.trim().toLowerCase()
+                    : "";
 
+            const password =
+                loginPassword ? loginPassword.value : "";
 
-        // =================================
-        // GET VALUES
-        // =================================
+            if (email === "") {
+                showLoginMessage(
+                    "Please enter your email.",
+                    "error"
+                );
+                return;
+            }
 
-        const email =
-            loginEmail.value
-                .trim()
-                .toLowerCase();
+            if (password === "") {
+                showLoginMessage(
+                    "Please enter your password.",
+                    "error"
+                );
+                return;
+            }
 
+            const submitBtn = loginForm.querySelector('[type="submit"]');
+            if (submitBtn) submitBtn.disabled = true;
 
-        const password =
-            loginPassword.value;
+            try {
+                const response = await fetch(`${API_BASE_URL}/instructors/login`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        email: email,
+                        password: password
+                    })
+                });
 
+                const result = await response.json();
 
-        // =================================
-        // BASIC VALIDATION
-        // =================================
-
-        if (email === "") {
-
-            showLoginMessage(
-                "Please enter your email."
-            );
-
-            return;
-
-        }
-
-
-        if (password === "") {
-
-            showLoginMessage(
-                "Please enter your password."
-            );
-
-            return;
-
-        }
-
-
-        // =================================
-        // GET ALL INSTRUCTORS
-        // =================================
-
-        const instructors =
-            getInstructors();
-
-
-        // =================================
-        // CHECK ACCOUNTS
-        // =================================
-
-        if (
-            instructors.length === 0
-        ) {
-
-            showLoginMessage(
-                "No instructor account found. Please create an account first."
-            );
-
-            return;
-
-        }
-
-
-        // =================================
-        // FIND INSTRUCTOR
-        // =================================
-
-        const instructor =
-            instructors.find(
-                function (user) {
-
-                    if (!user) {
-
-                        return false;
-
-                    }
-
-
-                    const storedEmail =
-                        String(
-                            user.email || ""
-                        )
-                        .trim()
-                        .toLowerCase();
-
-
-                    const storedPassword =
-                        String(
-                            user.password || ""
-                        );
-
-
-                    const role =
-                        user.role ||
-                        "instructor";
-
-
-                    return (
-                        storedEmail === email &&
-                        storedPassword === password &&
-                        role === "instructor"
+                if (!response.ok || !result.success) {
+                    showLoginMessage(
+                        result.message || "Incorrect email or password.",
+                        "error"
                     );
-
+                    return;
                 }
-            );
 
+                // Save session and JWT token in localStorage
+                localStorage.setItem(
+                    "veritext_logged_in",
+                    "true"
+                );
 
-        // =================================
-        // INVALID LOGIN
-        // =================================
+                if (result.token) {
+                    localStorage.setItem("veritext_token", result.token);
+                }
 
-        if (!instructor) {
+                localStorage.setItem(
+                    "veritext_current_user",
+                    JSON.stringify(result.instructor)
+                );
 
-            showLoginMessage(
-                "Incorrect email or password."
-            );
+                showLoginMessage(
+                    "Login successful! Redirecting...",
+                    "success"
+                );
 
-            return;
+                // Redirect to instructor dashboard
+                setTimeout(function () {
+                    window.location.href = "instructor.html";
+                }, 500);
+
+            } catch (error) {
+                console.error("Login network error:", error);
+                showLoginMessage(
+                    "Could not connect to the backend server. Please make sure it is running.",
+                    "error"
+                );
+            } finally {
+                if (submitBtn) submitBtn.disabled = false;
+            }
 
         }
+    );
 
-
-        // =================================
-        // LOGIN SUCCESS
-        // =================================
-
-        localStorage.setItem(
-            "veritext_logged_in",
-            "true"
-        );
-
-
-        // =================================
-        // SAVE CURRENT USER
-        // =================================
-
-        const currentUser = {
-
-            id:
-                instructor.id,
-
-            name:
-                instructor.name,
-
-            email:
-                instructor.email,
-
-            role:
-                instructor.role ||
-                "instructor"
-
-        };
-
-
-        localStorage.setItem(
-            "veritext_current_user",
-            JSON.stringify(
-                currentUser
-            )
-        );
-
-
-        // =================================
-        // SUCCESS MESSAGE
-        // =================================
-
-        showLoginMessage(
-            "Login successful! Redirecting...",
-            "success"
-        );
-
-
-        // =================================
-        // REDIRECT
-        // =================================
-
-        setTimeout(
-            function () {
-
-                window.location.href =
-                    "instructor.html";
-
-            },
-            500
-        );
-
-    }
-);
+}

@@ -1,7 +1,8 @@
 // =====================================
-// VERITEXT INSTRUCTOR SIGNUP
+// VERITEXT INSTRUCTOR SIGNUP (MONGODB)
 // =====================================
 
+const API_BASE_URL = "https://veritext-backend-oe56.onrender.com/api";
 
 // =====================================
 // SIGNUP ELEMENTS
@@ -27,87 +28,18 @@ const signupError =
 
 
 // =====================================
-// GET ALL INSTRUCTORS
-// =====================================
-
-function getInstructors() {
-
-    try {
-
-        const stored =
-            localStorage.getItem(
-                "veritext_instructors"
-            );
-
-
-        if (!stored) {
-
-            return [];
-
-        }
-
-
-        const instructors =
-            JSON.parse(stored);
-
-
-        if (
-            !Array.isArray(instructors)
-        ) {
-
-            return [];
-
-        }
-
-
-        return instructors;
-
-    }
-
-    catch (error) {
-
-        console.error(
-            "Could not load instructor accounts:",
-            error
-        );
-
-        return [];
-
-    }
-
-}
-
-
-// =====================================
-// SAVE ALL INSTRUCTORS
-// =====================================
-
-function saveInstructors(
-    instructors
-) {
-
-    localStorage.setItem(
-        "veritext_instructors",
-        JSON.stringify(
-            instructors
-        )
-    );
-
-}
-
-
-// =====================================
 // SHOW MESSAGE
 // =====================================
 
 function showSignupMessage(
     message,
-    type
+    type = "error"
 ) {
+
+    if (!signupError) return;
 
     signupError.textContent =
         message;
-
 
     signupError.className =
         "auth-message " +
@@ -117,274 +49,128 @@ function showSignupMessage(
 
 
 // =====================================
-// SIGNUP
+// SIGNUP SUBMIT
 // =====================================
 
-signupForm.addEventListener(
-    "submit",
-    function (event) {
+if (signupForm) {
 
-        event.preventDefault();
+    signupForm.addEventListener(
+        "submit",
+        async function (event) {
 
+            event.preventDefault();
 
-        // =================================
-        // CLEAR OLD MESSAGE
-        // =================================
+            // Clear old message
+            showSignupMessage("", "");
 
-        signupError.textContent = "";
+            const name =
+                signupName ? signupName.value.trim() : "";
 
-        signupError.className =
-            "auth-message";
+            const email =
+                signupEmail
+                    ? signupEmail.value.trim().toLowerCase()
+                    : "";
 
+            const password =
+                signupPassword ? signupPassword.value : "";
 
-        // =================================
-        // GET FORM VALUES
-        // =================================
+            const confirm =
+                confirmPassword ? confirmPassword.value : "";
 
-        const name =
-            signupName.value.trim();
+            // Validation
+            if (name === "") {
+                showSignupMessage(
+                    "Please enter your full name.",
+                    "error"
+                );
+                return;
+            }
 
+            if (email === "") {
+                showSignupMessage(
+                    "Please enter your email address.",
+                    "error"
+                );
+                return;
+            }
 
-        const email =
-            signupEmail.value
-                .trim()
-                .toLowerCase();
+            if (password.length < 6) {
+                showSignupMessage(
+                    "Password must contain at least 6 characters.",
+                    "error"
+                );
+                return;
+            }
 
+            if (password !== confirm) {
+                showSignupMessage(
+                    "Passwords do not match.",
+                    "error"
+                );
+                return;
+            }
 
-        const password =
-            signupPassword.value;
+            const submitBtn = signupForm.querySelector('[type="submit"]');
+            if (submitBtn) submitBtn.disabled = true;
 
+            try {
+                const response = await fetch(`${API_BASE_URL}/instructors/signup`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        name: name,
+                        email: email,
+                        password: password
+                    })
+                });
 
-        const confirm =
-            confirmPassword.value;
+                const result = await response.json();
 
-
-        // =================================
-        // NAME VALIDATION
-        // =================================
-
-        if (name === "") {
-
-            showSignupMessage(
-                "Please enter your full name.",
-                "error"
-            );
-
-            return;
-
-        }
-
-
-        // =================================
-        // EMAIL VALIDATION
-        // =================================
-
-        if (email === "") {
-
-            showSignupMessage(
-                "Please enter your email address.",
-                "error"
-            );
-
-            return;
-
-        }
-
-
-        // =================================
-        // PASSWORD VALIDATION
-        // =================================
-
-        if (
-            password.length < 6
-        ) {
-
-            showSignupMessage(
-                "Password must contain at least 6 characters.",
-                "error"
-            );
-
-            return;
-
-        }
-
-
-        // =================================
-        // CONFIRM PASSWORD
-        // =================================
-
-        if (
-            password !== confirm
-        ) {
-
-            showSignupMessage(
-                "Passwords do not match.",
-                "error"
-            );
-
-            return;
-
-        }
-
-
-        // =================================
-        // GET EXISTING INSTRUCTORS
-        // =================================
-
-        const instructors =
-            getInstructors();
-
-
-        // =================================
-        // CHECK DUPLICATE EMAIL
-        // =================================
-
-        const existingInstructor =
-            instructors.find(
-                function (instructor) {
-
-                    return (
-                        String(
-                            instructor.email
-                        )
-                            .toLowerCase() ===
-                        email
+                if (!response.ok || !result.success) {
+                    showSignupMessage(
+                        result.message || "Signup failed. Please try again.",
+                        "error"
                     );
-
+                    return;
                 }
-            );
 
+                // Save session and JWT token in localStorage
+                localStorage.setItem(
+                    "veritext_logged_in",
+                    "true"
+                );
 
-        if (
-            existingInstructor
-        ) {
+                if (result.token) {
+                    localStorage.setItem("veritext_token", result.token);
+                }
 
-            showSignupMessage(
-                "An account with this email already exists. Please log in.",
-                "error"
-            );
+                localStorage.setItem(
+                    "veritext_current_user",
+                    JSON.stringify(result.instructor)
+                );
 
-            return;
+                showSignupMessage(
+                    "Account created successfully! Redirecting...",
+                    "success"
+                );
+
+                setTimeout(function () {
+                    window.location.href = "instructor.html";
+                }, 700);
+
+            } catch (error) {
+                console.error("Signup network error:", error);
+                showSignupMessage(
+                    "Could not connect to the backend server. Please make sure it is running.",
+                    "error"
+                );
+            } finally {
+                if (submitBtn) submitBtn.disabled = false;
+            }
 
         }
+    );
 
-
-        // =================================
-        // CREATE UNIQUE INSTRUCTOR ID
-        // =================================
-
-        const instructorId =
-            Date.now().toString() +
-            "-" +
-            Math.random()
-                .toString(36)
-                .substring(2, 8);
-
-
-        // =================================
-        // CREATE INSTRUCTOR OBJECT
-        // =================================
-
-        const instructor = {
-
-            id:
-                instructorId,
-
-            name:
-                name,
-
-            email:
-                email,
-
-            password:
-                password,
-
-            role:
-                "instructor",
-
-            createdAt:
-                new Date().toISOString()
-
-        };
-
-
-        // =================================
-        // ADD NEW INSTRUCTOR
-        // =================================
-
-        instructors.push(
-            instructor
-        );
-
-
-        // =================================
-        // SAVE INSTRUCTORS
-        // =================================
-
-        saveInstructors(
-            instructors
-        );
-
-
-        // =================================
-        // CREATE LOGIN SESSION
-        // =================================
-
-        localStorage.setItem(
-            "veritext_logged_in",
-            "true"
-        );
-
-
-        // =================================
-        // SAVE CURRENT USER
-        // =================================
-
-        localStorage.setItem(
-            "veritext_current_user",
-            JSON.stringify(
-                {
-
-                    id:
-                        instructor.id,
-
-                    name:
-                        instructor.name,
-
-                    email:
-                        instructor.email,
-
-                    role:
-                        instructor.role
-
-                }
-            )
-        );
-
-
-        // =================================
-        // SUCCESS MESSAGE
-        // =================================
-
-        showSignupMessage(
-            "Account created successfully! Redirecting...",
-            "success"
-        );
-
-
-        // =================================
-        // REDIRECT
-        // =================================
-
-        setTimeout(
-            function () {
-
-                window.location.href =
-                    "instructor.html";
-
-            },
-            700
-        );
-
-    }
-);
+}

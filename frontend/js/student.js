@@ -154,6 +154,11 @@ if (studentLogout) {
 
 
             localStorage.removeItem(
+                "veritext_student_token"
+            );
+
+
+            localStorage.removeItem(
                 "veritext_current_student"
             );
 
@@ -168,53 +173,7 @@ if (studentLogout) {
 
 
 
-// =====================================
-// GET ASSIGNMENTS
-// =====================================
-
-function getAssignments() {
-
-    try {
-
-        return JSON.parse(
-            localStorage.getItem(
-                "veritext_assignments"
-            )
-        ) || [];
-
-    }
-
-    catch (error) {
-
-        console.error(
-            "Could not load assignments:",
-            error
-        );
-
-        return [];
-
-    }
-
-}
-
-
-
-// =====================================
-// SAVE ASSIGNMENTS
-// =====================================
-
-function saveAssignments(
-    assignments
-) {
-
-    localStorage.setItem(
-        "veritext_assignments",
-        JSON.stringify(
-            assignments
-        )
-    );
-
-}
+// Assignments are fetched dynamically from MongoDB via /api/assignments/code/:code
 
 
 
@@ -222,29 +181,25 @@ function saveAssignments(
 // FIND ASSIGNMENT
 // =====================================
 
-function findAssignment(
-    code
-) {
 
-    const assignments =
-        getAssignments();
+async function findAssignment(code) {
+    try {
+        const response = await fetch(
+            `https://veritext-backend-oe56.onrender.com/api/assignments/code/${encodeURIComponent(code.trim())}`
+        );
 
+        const data = await response.json();
 
-    return assignments.find(
-        function (assignment) {
-
-            return (
-                String(
-                    assignment.code
-                ).toLowerCase() ===
-                String(
-                    code
-                ).toLowerCase()
-            );
-
+        if (!response.ok || !data.success) {
+            return null;
         }
-    );
 
+        return data.assignment;
+    } catch (error) {
+        console.error("Could not fetch assignment:", error);
+        alert("Could not connect to the server. Please try again.");
+        return null;
+    }
 }
 
 
@@ -936,65 +891,50 @@ function showNotFoundMessage() {
 // ASSIGNMENT CODE INPUT
 // =====================================
 
-assignmentCodeInput.addEventListener(
-    "input",
-    function () {
 
-        const code =
-            assignmentCodeInput.value.trim();
+let lastLoadedCode = "";
+let assignmentLoading = false;
 
+async function loadAssignmentByCode() {
+    const code = assignmentCodeInput.value.trim().toUpperCase();
 
-        // =================================
-        // EMPTY
-        // =================================
+    if (code === "") {
+        lastLoadedCode = "";
+        showEnterCodeMessage();
+        return;
+    }
 
-        if (code === "") {
+    // Avoid repeated requests for the same code.
+    if (code === lastLoadedCode || assignmentLoading) {
+        return;
+    }
 
-            showEnterCodeMessage();
+    assignmentLoading = true;
 
-            return;
-
-        }
-
-
-
-        // =================================
-        // FIND
-        // =================================
-
-        const assignment =
-            findAssignment(
-                code
-            );
-
-
-
-        // =================================
-        // FOUND
-        // =================================
+    try {
+        const assignment = await findAssignment(code);
 
         if (assignment) {
-
-            showAssignment(
-                assignment
-            );
-
-        }
-
-
-
-        // =================================
-        // NOT FOUND
-        // =================================
-
-        else {
-
+            lastLoadedCode = code;
+            showAssignment(assignment);
+        } else {
+            lastLoadedCode = "";
             showNotFoundMessage();
-
         }
-
+    } finally {
+        assignmentLoading = false;
     }
-);
+}
+
+assignmentCodeInput.addEventListener("change", loadAssignmentByCode);
+
+assignmentCodeInput.addEventListener("keydown", function (event) {
+    if (event.key === "Enter") {
+        event.preventDefault();
+        loadAssignmentByCode();
+    }
+});
+
 
 
 
@@ -1123,662 +1063,176 @@ function getWordCount(
 // SUBMIT ASSIGNMENT
 // =====================================
 
-submissionForm.addEventListener(
-    "submit",
-    function (event) {
 
-        event.preventDefault();
-
-
-
-        // =================================
-        // STUDENT DETAILS
-        // =================================
-
-        const studentName =
-            studentNameInput.value.trim();
-
-
-        const studentId =
-            studentIdInput.value.trim();
-
-
-        const assignmentCode =
-            assignmentCodeInput.value.trim();
-
-
-
-        // =================================
-        // CURRENT STUDENT
-        // =================================
-
-        const loggedStudent =
-            JSON.parse(
-                localStorage.getItem(
-                    "veritext_current_student"
-                )
-            );
-
-
-        if (!loggedStudent) {
-
-            alert(
-                "Your student session has expired. Please log in again."
-            );
-
-
-            localStorage.removeItem(
-                "veritext_student_logged_in"
-            );
-
-
-            window.location.href =
-                "student-login.html";
-
-
-            return;
-
-        }
-
-
-
-        // =================================
-        // IDENTITY CHECK
-        // =================================
-
-        if (
-            String(
-                loggedStudent.studentId
-            ).toLowerCase() !==
-            String(
-                studentId
-            ).toLowerCase()
-        ) {
-
-            alert(
-                "Student identity does not match the logged-in account."
-            );
-
-
-            return;
-
-        }
-
-
-
-        // =================================
-        // BASIC VALIDATION
-        // =================================
-
-        if (
-            studentName === ""
-        ) {
-
-            alert(
-                "Please enter your full name."
-            );
-
-
-            return;
-
-        }
-
-
-        if (
-            studentId === ""
-        ) {
-
-            alert(
-                "Please enter your student ID."
-            );
-
-
-            return;
-
-        }
-
-
-        if (
-            assignmentCode === ""
-        ) {
-
-            alert(
-                "Please enter the assignment code."
-            );
-
-
-            return;
-
-        }
-
-
-
-        // =================================
-        // GET ASSIGNMENTS
-        // =================================
-
-        const assignments =
-            getAssignments();
-
-
-
-        // =================================
-        // FIND ASSIGNMENT
-        // =================================
-
-        const assignmentIndex =
-            assignments.findIndex(
-                function (assignment) {
-
-                    return (
-                        String(
-                            assignment.code
-                        ).toLowerCase() ===
-                        String(
-                            assignmentCode
-                        ).toLowerCase()
-                    );
-
-                }
-            );
-
-
-        if (
-            assignmentIndex === -1
-        ) {
-
-            alert(
-                "Assignment not found. Please check the code."
-            );
-
-
-            return;
-
-        }
-
-
-
-        // =================================
-        // ASSIGNMENT
-        // =================================
-
-        const assignment =
-            assignments[
-                assignmentIndex
-            ];
-
-
-
-        // =================================
-        // QUESTIONS
-        // =================================
-
-        const questions =
-            getQuestions(
-                assignment
-            );
-
-
-        if (
-            questions.length === 0
-        ) {
-
-            alert(
-                "This assignment does not contain any questions."
-            );
-
-
-            return;
-
-        }
-
-
-
-        // =================================
-        // SUBMISSIONS ARRAY
-        // =================================
-
-        if (
-            !Array.isArray(
-                assignment.submissions
-            )
-        ) {
-
-            assignment.submissions =
-                [];
-
-        }
-
-
-
-        // =================================
-        // DUPLICATE SUBMISSION
-        // =================================
-
-        const alreadySubmitted =
-            assignment.submissions.some(
-                function (submission) {
-
-                    return (
-                        String(
-                            submission.studentId
-                        ).toLowerCase() ===
-                        String(
-                            studentId
-                        ).toLowerCase()
-                    );
-
-                }
-            );
-
-
-        if (
-            alreadySubmitted
-        ) {
-
-            alert(
-                "You have already submitted this assignment."
-            );
-
-
-            return;
-
-        }
-
-
-
-        // =================================
-        // ANSWER BOXES
-        // =================================
-
-        const answerInputs =
-            questionsContainer.querySelectorAll(
-                ".student-answer"
-            );
-
-
-        if (
-            answerInputs.length !==
-            questions.length
-        ) {
-
-            alert(
-                "Please enter the assignment code again so all questions can be loaded."
-            );
-
-
-            return;
-
-        }
-
-
-
-        // =================================
-        // STORE ANSWERS
-        // =================================
-
-        const answers =
-            [];
-
-
-        const combinedAnswers =
-            [];
-
-
-
-        // =================================
-        // VALIDATE EACH QUESTION
-        // =================================
-
-        for (
-            let i = 0;
-            i < questions.length;
-            i++
-        ) {
-
-            const question =
-                questions[i];
-
-
-            const answerInput =
-                answerInputs[i];
-
-
-            const answerText =
-                answerInput.value.trim();
-
-
-            const type =
-                question.type === "code"
-                    ? "code"
-                    : "text";
-
-
-            const language =
-                type === "code"
-                    ? question.language || ""
-                    : null;
-
-
-
-            // =================================
-            // EMPTY ANSWER
-            // =================================
-
-            if (
-                answerText === ""
-            ) {
-
-                alert(
-                    `Please answer Question ${i + 1}.`
-                );
-
-
-                answerInput.focus();
-
-
-                return;
-
-            }
-
-
-
-            // =================================
-            // TEXT WORD LIMIT
-            // =================================
-
-            if (
-                type === "text"
-            ) {
-
-                const totalWords =
-                    getWordCount(
-                        answerText
-                    );
-
-
-                const minWords =
-                    Number(
-                        question.minWords ??
-                        assignment.minWords ??
-                        0
-                    );
-
-
-                const maxWords =
-                    Number(
-                        question.maxWords ??
-                        assignment.maxWords ??
-                        10000
-                    );
-
-
-                if (
-                    totalWords <
-                    minWords
-                ) {
-
-                    alert(
-                        `Question ${i + 1}: Your answer contains ${totalWords} words.\n\n` +
-                        `Minimum required: ${minWords} words.`
-                    );
-
-
-                    answerInput.focus();
-
-
-                    return;
-
-                }
-
-
-                if (
-                    totalWords >
-                    maxWords
-                ) {
-
-                    alert(
-                        `Question ${i + 1}: Your answer contains ${totalWords} words.\n\n` +
-                        `Maximum allowed: ${maxWords} words.`
-                    );
-
-
-                    answerInput.focus();
-
-
-                    return;
-
-                }
-
-            }
-
-
-
-            // =================================
-            // CODE QUESTION
-            // =================================
-
-            if (
-                type === "code" &&
-                language === ""
-            ) {
-
-                alert(
-                    `Programming language is missing for Question ${i + 1}.`
-                );
-
-
-                return;
-
-            }
-
-
-
-            // =================================
-            // WORD COUNT
-            // =================================
-
-            const wordCount =
-                getWordCount(
-                    answerText
-                );
-
-
-
-            // =================================
-            // SAVE ANSWER
-            // =================================
-
-            answers.push({
-
-                questionId:
-                    question.id ??
-                    i + 1,
-
-                questionNumber:
-                    i + 1,
-
-                type:
-                    type,
-
-                language:
-                    language,
-
-                question:
-                    question.question ||
-                    question.text ||
-                    "",
-
-                answer:
-                    answerText,
-
-                wordCount:
-                    wordCount,
-
-                characterCount:
-                    answerText.length
-
-            });
-
-
-
-            // =================================
-            // COMBINED ANSWER
-            // =================================
-
-            combinedAnswers.push(
-
-                `Question ${i + 1} ` +
-                `(${type === "code"
-                    ? getLanguageName(language)
-                    : "Text"}):\n` +
-
-                `Question: ` +
-
-                (
-                    question.question ||
-                    question.text ||
-                    ""
-                ) +
-
-                `\nAnswer:\n` +
-
-                answerText
-
-            );
-
-        }
-
-
-
-        // =====================================
-        // CREATE SUBMISSION
-        // =====================================
-
-        const submission = {
-
-            id:
-                Date.now(),
-
-
-            studentName:
-                studentName,
-
-
-            studentId:
-                studentId,
-
-
-            studentEmail:
-                loggedStudent.email || "",
-
-
-            assignmentCode:
-                assignment.code,
-
-
-            // =================================
-            // QUESTION-BY-QUESTION ANSWERS
-            // =================================
-
-            answers:
-                answers,
-
-
-            // =================================
-            // COMPATIBILITY ANSWER
-            // =================================
-
-            answer:
-                combinedAnswers.join(
-                    "\n\n"
-                ),
-
-
-            // =================================
-            // TOTAL WORD COUNT
-            // =================================
-
-            wordCount:
-                answers.reduce(
-                    function (
-                        total,
-                        item
-                    ) {
-
-                        return (
-                            total +
-                            item.wordCount
-                        );
-
-                    },
-                    0
-                ),
-
-
-            // =================================
-            // SUBMISSION TIME
-            // =================================
-
-            submittedAt:
-                new Date().toISOString()
-
-        };
-
-
-
-        // =====================================
-        // ADD SUBMISSION
-        // =====================================
-
-        assignment.submissions.push(
-            submission
-        );
-
-
-
-        // =====================================
-        // UPDATE ASSIGNMENT
-        // =====================================
-
-        assignments[
-            assignmentIndex
-        ] =
-            assignment;
-
-
-
-        // =====================================
-        // SAVE
-        // =====================================
-
-        saveAssignments(
-            assignments
-        );
-
-
-
-        // =====================================
-        // SUCCESS
-        // =====================================
-
-        alert(
-            "Assignment submitted successfully!"
-        );
-
-
-
-        // =====================================
-        // GO HOME
-        // =====================================
-
-        window.location.href =
-            "index.html";
-
+submissionForm.addEventListener("submit", async function (event) {
+    event.preventDefault();
+
+    const studentName = studentNameInput.value.trim();
+    const studentId = studentIdInput.value.trim();
+    const assignmentCode = assignmentCodeInput.value.trim().toUpperCase();
+
+    const loggedStudent = JSON.parse(
+        localStorage.getItem("veritext_current_student") || "null"
+    );
+
+    if (!loggedStudent) {
+        alert("Your student session has expired. Please log in again.");
+        localStorage.removeItem("veritext_student_logged_in");
+        window.location.href = "student-login.html";
+        return;
     }
-);
 
+    if (
+        String(loggedStudent.studentId).toLowerCase() !==
+        studentId.toLowerCase()
+    ) {
+        alert("Student identity does not match the logged-in account.");
+        return;
+    }
 
+    if (!studentName || !studentId || !assignmentCode) {
+        alert("Please enter your name, student ID, and assignment code.");
+        return;
+    }
+
+    // Fetch the current assignment from MongoDB.
+    const assignment = await findAssignment(assignmentCode);
+
+    if (!assignment) {
+        alert("Assignment not found. Please check the assignment code.");
+        return;
+    }
+
+    const questions = getQuestions(assignment);
+
+    if (!questions.length) {
+        alert("This assignment does not contain any questions.");
+        return;
+    }
+
+    const answerInputs = questionsContainer.querySelectorAll(".student-answer");
+
+    if (answerInputs.length !== questions.length) {
+        alert("Please load the assignment questions again.");
+        return;
+    }
+
+    const combinedAnswers = [];
+
+    for (let i = 0; i < questions.length; i++) {
+        const question = questions[i];
+        const answerInput = answerInputs[i];
+        const answerText = answerInput.value.trim();
+
+        const type = question.type === "code" ? "code" : "text";
+        const language = type === "code" ? question.language || "" : null;
+
+        if (!answerText) {
+            alert(`Please answer Question ${i + 1}.`);
+            answerInput.focus();
+            return;
+        }
+
+        if (type === "text") {
+            const wordCount = getWordCount(answerText);
+            const minWords = 0;
+            const maxWords = Number(question.maxWords ?? 10000);
+
+            if (wordCount < minWords) {
+                alert(`Question ${i + 1}: Minimum ${minWords} words required.`);
+                answerInput.focus();
+                return;
+            }
+
+            if (wordCount > maxWords) {
+                alert(`Question ${i + 1}: Maximum ${maxWords} words allowed.`);
+                answerInput.focus();
+                return;
+            }
+        }
+
+        if (type === "code" && !language) {
+            alert(`Programming language is missing for Question ${i + 1}.`);
+            return;
+        }
+
+        combinedAnswers.push(
+            `Question ${i + 1} (${type === "code" ? getLanguageName(language) : "Text"}):\n` +
+            `Question: ${question.question || question.text || ""}\n` +
+            `Answer:\n${answerText}`
+        );
+    }
+
+    if (!assignment._id) {
+        alert("Assignment ID is missing. Please reload the assignment.");
+        return;
+    }
+
+    // Prevent accidental double-click submissions.
+    const submitButton = submissionForm.querySelector('[type="submit"]');
+
+    if (submitButton) submitButton.disabled = true;
+
+    try {
+        const fileInput = document.getElementById("submissionFileInput");
+        const hasFile = fileInput && fileInput.files && fileInput.files.length > 0;
+        const studentToken = localStorage.getItem("veritext_student_token");
+
+        let response;
+        if (hasFile) {
+            const formData = new FormData();
+            formData.append("assignmentId", assignment._id);
+            formData.append("studentName", studentName);
+            formData.append("studentId", studentId);
+            formData.append("content", combinedAnswers.join("\n\n"));
+            formData.append("file", fileInput.files[0]);
+
+            const headers = {};
+            if (studentToken) headers["Authorization"] = `Bearer ${studentToken}`;
+
+            response = await fetch("https://veritext-backend-oe56.onrender.com/api/submissions", {
+                method: "POST",
+                headers: headers,
+                body: formData
+            });
+        } else {
+            const headers = { "Content-Type": "application/json" };
+            if (studentToken) headers["Authorization"] = `Bearer ${studentToken}`;
+
+            response = await fetch("https://veritext-backend-oe56.onrender.com/api/submissions", {
+                method: "POST",
+                headers: headers,
+                body: JSON.stringify({
+                    assignmentId: assignment._id,
+                    studentName,
+                    studentId,
+                    content: combinedAnswers.join("\n\n")
+                })
+            });
+        }
+
+        const result = await response.json();
+
+        if (!response.ok || !result.success) {
+            alert(result.message || "Submission failed. Please try again.");
+            return;
+        }
+
+        // Automatically log out student upon successful submission
+        localStorage.removeItem("veritext_student_logged_in");
+        localStorage.removeItem("veritext_student_token");
+        localStorage.removeItem("veritext_current_student");
+
+        alert("Assignment submitted successfully! You have been logged out.");
+        window.location.href = "index.html";
+
+    } catch (error) {
+        console.error("Submission error:", error);
+        alert("Could not connect to the server. Please check your backend.");
+    } finally {
+        if (submitButton) submitButton.disabled = false;
+    }
+});
 
 // =====================================
 // INITIAL STATE
