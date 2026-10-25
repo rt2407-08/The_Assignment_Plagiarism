@@ -36,6 +36,34 @@
         href="css/style.css"
     >
 
+    <style>
+        /* 4-COLUMN STATS GRID */
+        .instructor-stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr) !important;
+            gap: 18px;
+            margin-bottom: 50px;
+        }
+
+        @media (max-width: 960px) {
+            .instructor-stats {
+                grid-template-columns: repeat(2, 1fr) !important;
+            }
+        }
+
+        @media (max-width: 520px) {
+            .instructor-stats {
+                grid-template-columns: 1fr !important;
+            }
+        }
+
+        .dashboard-stat-icon.avg-icon {
+            background: #ede9fe;
+            color: #6d28d9;
+            font-weight: 700;
+        }
+    </style>
+
 </head>
 
 
@@ -146,13 +174,15 @@
             </div>
 
 
-            <button
-                type="button"
-                class="primary-btn"
-                id="openCreateBtn"
-            >
-                + Create Assignment
-            </button>
+            <div style="display: flex; gap: 12px; align-items: center;">
+                <button
+                    type="button"
+                    class="primary-btn"
+                    id="openCreateBtn"
+                >
+                    + Create Assignment
+                </button>
+            </div>
 
         </div>
 
@@ -228,7 +258,7 @@
                 <div class="stat-card-top">
 
                     <span>
-                        FLAGGED
+                        FLAGGED PAIRS
                     </span>
 
                     <div class="dashboard-stat-icon flagged-icon">
@@ -242,7 +272,35 @@
                 </strong>
 
                 <p>
-                    High similarity pairs
+                    High similarity (≥60%)
+                </p>
+
+            </div>
+
+
+
+            <!-- AVERAGE SIMILARITY -->
+
+            <div class="instructor-stat-card">
+
+                <div class="stat-card-top">
+
+                    <span>
+                        AVG SIMILARITY
+                    </span>
+
+                    <div class="dashboard-stat-icon avg-icon">
+                        %
+                    </div>
+
+                </div>
+
+                <strong id="avgSimilarityCount">
+                    0%
+                </strong>
+
+                <p>
+                    Across submission pairs
                 </p>
 
             </div>

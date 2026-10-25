@@ -261,6 +261,268 @@
             font-weight: 600;
         }
 
+        /* 4-COLUMN STATS GRID */
+        .report-page .report-stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr) !important;
+            gap: 18px;
+            margin-bottom: 30px;
+        }
+
+        @media (max-width: 960px) {
+            .report-page .report-stats {
+                grid-template-columns: repeat(2, 1fr) !important;
+            }
+        }
+
+        @media (max-width: 520px) {
+            .report-page .report-stats {
+                grid-template-columns: 1fr !important;
+            }
+        }
+
+        .report-stat-icon.avg-icon {
+            background: #ede9fe;
+            color: #6d28d9;
+            font-weight: 700;
+        }
+
+        /* CONTROLS PANEL: SEARCH, TABS & THRESHOLD SLIDER */
+        .report-controls-panel {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 14px;
+            padding: 20px;
+            margin-bottom: 24px;
+            box-shadow: 0 4px 14px rgba(15, 23, 42, 0.03);
+        }
+
+        .report-tabs-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #e2e8f0;
+            padding-bottom: 14px;
+            margin-bottom: 18px;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .report-tabs {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .report-tab {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            background: #f1f5f9;
+            border: 1px solid transparent;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            color: #475569;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .report-tab:hover {
+            background: #e2e8f0;
+            color: #0f172a;
+        }
+
+        .report-tab.active {
+            background: #0f2747;
+            color: #ffffff;
+            border-color: #0f2747;
+        }
+
+        .report-tab .tab-badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 20px;
+            height: 20px;
+            padding: 0 6px;
+            border-radius: 10px;
+            font-size: 11px;
+            font-weight: 700;
+            background: rgba(0, 0, 0, 0.08);
+        }
+
+        .report-tab.active .tab-badge {
+            background: rgba(255, 255, 255, 0.25);
+            color: #ffffff;
+        }
+
+        .threshold-slider-box {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 18px 22px;
+        }
+
+        .threshold-slider-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 14px;
+            margin-bottom: 12px;
+            flex-wrap: wrap;
+        }
+
+        .threshold-slider-header strong {
+            font-size: 14px;
+            color: #0f172a;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .threshold-slider-header p {
+            font-size: 12px;
+            color: #64748b;
+            margin: 4px 0 0 0;
+        }
+
+        .threshold-pill {
+            background: #0f2747;
+            color: #ffffff;
+            padding: 3px 12px;
+            border-radius: 14px;
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        .reset-threshold-btn {
+            background: #ffffff;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+            padding: 5px 12px;
+            font-size: 11px;
+            font-weight: 600;
+            color: #475569;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .reset-threshold-btn:hover {
+            background: #f1f5f9;
+            color: #0f172a;
+        }
+
+        .slider-track-wrap {
+            width: 100%;
+            margin: 12px 0 6px;
+        }
+
+        .similarity-slider {
+            width: 100%;
+            height: 7px;
+            border-radius: 6px;
+            background: #cbd5e1;
+            accent-color: #0f2747;
+            cursor: pointer;
+            outline: none;
+        }
+
+        .slider-marks {
+            display: flex;
+            justify-content: space-between;
+            font-size: 11px;
+            color: #94a3b8;
+            font-weight: 500;
+        }
+
+        .similarity-search-wrap {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: #ffffff;
+            border: 1px solid #cbd5e1;
+            border-radius: 10px;
+            padding: 9px 14px;
+            width: 320px;
+            max-width: 100%;
+            box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04);
+        }
+
+        .similarity-search-wrap input {
+            border: none;
+            outline: none;
+            background: transparent;
+            font-size: 13px;
+            color: #0f172a;
+            width: 100%;
+        }
+
+        .toggle-comparison-btn {
+            background: #0f2747;
+            color: #ffffff;
+            border: none;
+            border-radius: 6px;
+            padding: 7px 14px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+            white-space: nowrap;
+        }
+
+        .toggle-comparison-btn:hover {
+            background: #1e3a5f;
+        }
+
+        /* SIDE-BY-SIDE ANSWERS COMPARISON ("AND COMPARISON") */
+        .side-by-side-answers {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+            margin-top: 14px;
+        }
+
+        @media (max-width: 720px) {
+            .side-by-side-answers {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .answer-column {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 12px;
+        }
+
+        .answer-column h5 {
+            font-size: 12px;
+            font-weight: 700;
+            margin: 0 0 8px;
+            color: #1e293b;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .answer-pre {
+            background: #ffffff;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+            padding: 12px;
+            font-size: 12px;
+            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+            line-height: 1.55;
+            white-space: pre-wrap;
+            word-break: break-word;
+            max-height: 250px;
+            overflow-y: auto;
+            color: #0f172a;
+            margin: 0;
+        }
+
 
         /* =====================================
            RESPONSIVE
@@ -576,6 +838,34 @@
 
                 </div>
 
+
+
+                <!-- AVERAGE SIMILARITY -->
+
+                <div class="report-stat-card">
+
+                    <div class="report-stat-top">
+
+                        <span>
+                            AVG SIMILARITY
+                        </span>
+
+                        <div class="report-stat-icon avg-icon">
+                            %
+                        </div>
+
+                    </div>
+
+                    <strong id="avgSimilarityCount">
+                        0%
+                    </strong>
+
+                    <p>
+                        Across evaluated pairs
+                    </p>
+
+                </div>
+
             </div>
 
 
@@ -673,114 +963,99 @@
 
             <section class="results-section">
 
-
                 <div class="report-section-heading">
 
                     <div>
-
                         <span class="section-tag">
                             ANALYSIS RESULTS
                         </span>
-
                         <h2>
                             Similarity results
                         </h2>
-
                         <p>
-                            All student submission pairs ranked
-                            by similarity.
+                            All student submission pairs with real-time threshold filtering and side-by-side answer comparisons.
                         </p>
+                    </div>
+                </div>
 
+                <!-- CONTROLS: TABS & THRESHOLD SLIDER ("THRESHOLD WALA FEATURE") -->
+                <div class="report-controls-panel">
+
+                    <div class="report-tabs-bar">
+                        <div class="report-tabs" id="reportTabs">
+                            <button type="button" class="report-tab active" data-tab="all">
+                                All Pairs <span class="tab-badge" id="tabCountAll">0</span>
+                            </button>
+                            <button type="button" class="report-tab" data-tab="flagged">
+                                Flagged (≥60%) <span class="tab-badge" id="tabCountFlagged">0</span>
+                            </button>
+                            <button type="button" class="report-tab" data-tab="review">
+                                Needs Review (30–59%) <span class="tab-badge" id="tabCountReview">0</span>
+                            </button>
+                        </div>
                     </div>
 
+                    <!-- THRESHOLD SLIDER (STATE-DRIVEN LIVE FILTERING) -->
+                    <div class="threshold-slider-box">
+                        <div class="threshold-slider-header">
+                            <div>
+                                <strong>Similarity Threshold: <span id="thresholdBadge" class="threshold-pill">0%</span></strong>
+                                <p>Drag slider to dynamically filter submission pairs at or above this percentage in real-time.</p>
+                            </div>
+                            <button type="button" id="resetThresholdBtn" class="reset-threshold-btn" title="Reset to 0%">
+                                Reset (0%)
+                            </button>
+                        </div>
 
-                    <!-- FILTER -->
+                        <div class="slider-track-wrap">
+                            <input
+                                type="range"
+                                id="similarityThresholdSlider"
+                                class="similarity-slider"
+                                min="0"
+                                max="100"
+                                step="5"
+                                value="0"
+                            >
+                        </div>
 
-                    <div class="similarity-filter">
-
-                        <label for="thresholdFilter">
-                            Show results above
-                        </label>
-
-                        <select id="thresholdFilter">
-
-                            <option value="0">
-                                0%
-                            </option>
-
-                            <option value="10">
-                                10%
-                            </option>
-
-                            <option value="20">
-                                20%
-                            </option>
-
-                            <option value="30">
-                                30%
-                            </option>
-
-                            <option value="40">
-                                40%
-                            </option>
-
-                            <option value="50">
-                                50%
-                            </option>
-
-                            <option value="60">
-                                60%
-                            </option>
-
-                            <option value="70">
-                                70%
-                            </option>
-
-                            <option value="80">
-                                80%
-                            </option>
-
-                        </select>
-
+                        <div class="slider-marks">
+                            <span>0% (All pairs)</span>
+                            <span>25%</span>
+                            <span>50%</span>
+                            <span>75%</span>
+                            <span>100% (Exact match)</span>
+                        </div>
                     </div>
 
                 </div>
 
-
-
                 <!-- RESULTS TABLE -->
-
                 <div class="results-table-wrapper">
 
                     <table class="results-table">
 
                         <thead>
-
                             <tr>
-
                                 <th>
                                     STUDENT A
                                 </th>
-
                                 <th>
                                     STUDENT B
                                 </th>
-
                                 <th>
                                     SIMILARITY
                                 </th>
-
                                 <th>
                                     STATUS
                                 </th>
-
+                                <th style="text-align: right;">
+                                    COMPARISON
+                                </th>
                             </tr>
-
                         </thead>
 
-
                         <tbody id="resultsTableBody">
-
                         </tbody>
 
                     </table>
@@ -1074,46 +1349,43 @@ body.report-page,
     color: #405158 !important;
 }
 
-/* No pointer/hand cursor on result rows or detail rows. */
-.report-page .results-table tbody tr,
-.report-page .results-table tbody tr * {
-    cursor: default !important;
+/* No pointer/hand cursor on raw result rows, but buttons and inputs are always clickable */
+.report-page .results-table tbody tr {
+    cursor: default;
+}
+.report-page .results-table .toggle-comparison-btn,
+.report-page .results-table button {
+    cursor: pointer !important;
 }
 </style>
 
 
 
 
-<!-- HARD DISABLE: result-row hover/selection highlighting -->
+<!-- HARD DISABLE: result-row hover/selection jumping, but KEEP buttons and table fully interactive -->
 <style id="disable-result-highlighting">
-/* The similarity results are display-only. Never visually react to the mouse. */
+/* The similarity results table is stable: rows never shift or jump on hover */
 .report-page .results-table tbody tr,
 .report-page .results-table tbody tr:hover,
 .report-page .results-table tbody tr:focus,
 .report-page .results-table tbody tr:focus-within,
-.report-page .results-table tbody tr:active,
-.report-page .results-table tbody tr:hover td,
-.report-page .results-table tbody tr:focus td,
-.report-page .results-table tbody tr:focus-within td,
-.report-page .results-table tbody tr:active td,
-.report-page .results-table tbody tr:hover th,
-.report-page .results-table tbody tr:focus th,
-.report-page .results-table tbody tr:active th,
-.report-page .results-table tbody tr:hover .question-details-cell,
-.report-page .results-table tbody tr:focus .question-details-cell,
-.report-page .results-table tbody tr:active .question-details-cell,
-.report-page .results-table tbody tr:hover .question-similarity-details,
-.report-page .results-table tbody tr:focus .question-similarity-details,
-.report-page .results-table tbody tr:active .question-similarity-details {
+.report-page .results-table tbody tr:active {
     background: #ffffff !important;
     background-color: #ffffff !important;
-    color: #405158 !important;
-    border-color: #e7edef !important;
     box-shadow: none !important;
     outline: none !important;
     filter: none !important;
     transform: none !important;
     transition: none !important;
+}
+
+.report-page .results-table tbody tr:hover td,
+.report-page .results-table tbody tr:focus td,
+.report-page .results-table tbody tr:focus-within td,
+.report-page .results-table tbody tr:active td {
+    background: #ffffff !important;
+    background-color: #ffffff !important;
+    border-color: #e7edef !important;
 }
 
 /* Expanded question details have their own fixed light background. */
@@ -1135,24 +1407,26 @@ body.report-page,
     color: #405158 !important;
 }
 
-/* Do not let the pointer ever put a result row into :hover state. */
+/* Ensure all buttons, table cells, and answer code blocks receive pointer events and clicks */
+.report-page .results-table,
+.report-page .results-table tbody,
 .report-page .results-table tbody tr,
-.report-page .results-table tbody tr * {
-    pointer-events: none !important;
-    cursor: default !important;
+.report-page .results-table tbody tr td,
+.report-page .results-table * {
+    pointer-events: auto !important;
 }
 
-/* Remove any visual selection/highlight if the browser has focused the row. */
-.report-page .results-table tbody tr::selection,
-.report-page .results-table tbody tr *::selection {
-    background: transparent !important;
-    color: inherit !important;
+.report-page .toggle-comparison-btn {
+    pointer-events: auto !important;
+    cursor: pointer !important;
+    position: relative !important;
+    z-index: 10 !important;
 }
 </style>
 
 
 <style id="report-no-result-hover-final">
-/* FINAL: similarity result rows must NEVER change appearance on hover/focus/active. */
+/* FINAL: similarity result rows keep steady white appearance without jumping */
 .report-page .results-table > tbody,
 .report-page .results-table > tbody > tr,
 .report-page .results-table > tbody > tr:hover,
@@ -1162,14 +1436,12 @@ body.report-page,
     background: #ffffff !important;
     background-color: #ffffff !important;
     background-image: none !important;
-    color: #405158 !important;
     box-shadow: none !important;
     outline: none !important;
     filter: none !important;
     transform: none !important;
     transition: none !important;
     text-shadow: none !important;
-    pointer-events: none !important;
 }
 
 .report-page .results-table > tbody > tr > td,
@@ -1180,7 +1452,6 @@ body.report-page,
     background: #ffffff !important;
     background-color: #ffffff !important;
     background-image: none !important;
-    color: #405158 !important;
     border-color: #e7edef !important;
     box-shadow: none !important;
     outline: none !important;
