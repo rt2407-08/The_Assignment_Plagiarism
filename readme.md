@@ -1,422 +1,244 @@
-# VeriText — Smart Academic Review Platform
+# VeriText — Full-Stack Academic Integrity & Plagiarism Detection Platform
 
-VeriText is a browser-based academic integrity and similarity-review platform designed to help instructors review student submissions faster.
+[![Node.js](https://img.shields.io/badge/Node.js-v18+-339933?logo=node.js&logoColor=white)](https://nodejs.org/)
+[![Express.js](https://img.shields.io/badge/Express.js-MVC%20Architecture-000000?logo=express&logoColor=white)](https://expressjs.com/)
+[![MongoDB Atlas](https://img.shields.io/badge/MongoDB%20Atlas-Cloud%20Database-47A248?logo=mongodb&logoColor=white)](https://www.mongodb.com/atlas)
+[![Render](https://img.shields.io/badge/Render-Deployed%20&%20Live-46E3B7?logo=render&logoColor=white)](https://veritext-backend-oe56.onrender.com)
+[![JWT](https://img.shields.io/badge/JWT-Role--Based%20Auth-000000?logo=jsonwebtokens&logoColor=white)](https://jwt.io/)
+[![Frontend](https://img.shields.io/badge/Frontend-React%20%2B%20Vite-61DAFB?logo=react&logoColor=black)](https://vitejs.dev/)
 
-It provides separate instructor and student portals, assignment creation, student submissions, similarity analysis, and detailed similarity reports.
-
-> **Project type:** Frontend-only academic project / prototype  
-> **Backend:** None — application data is stored in browser `localStorage`.
-
----
-
-## ✨ Features
-
-### Instructor Portal
-
-- Instructor sign-up and login
-- Protected instructor dashboard
-- Create assignments with multiple questions
-- Support for text and code questions
-- Code-language selection for programming questions
-- Assignment codes for student access
-- Submission counts and dashboard statistics
-- View similarity reports for assignments
-- Delete assignments
-- Identify high-similarity submission pairs
-- Question-wise similarity breakdown
-
-### Student Portal
-
-- Student sign-up and login
-- Student session management
-- Enter an assignment code to access an assignment
-- View assignment questions
-- Submit text answers
-- Submit code answers
-- Automatic submission storage
-- Student logout
-
-### Similarity Reports
-
-- Overall submission-pair similarity
-- Highest similarity pair
-- Configurable similarity threshold
-- High / moderate / low similarity status
-- Question-wise similarity results
-- Text similarity breakdown
-- Code similarity breakdown
-- Token and structural analysis for programming submissions
+VeriText is a full-stack academic integrity and source code / text similarity review platform built with **Node.js, Express, MongoDB Atlas, and React**. It enables educators to create multi-question text and code assignments, accepts student submissions via direct input or file uploads (`.java`, `.py`, `.cpp`, `.txt`), and computes cross-submission plagiarism percentages using a server-side **N-gram tokenizer and Jaccard similarity coefficient engine**.
 
 ---
 
-## 🧠 Similarity Analysis
+## 🌐 Live Cloud Deployment
 
-VeriText uses different comparison strategies depending on the question type.
+* **Live Cloud Service URL:** [https://veritext-backend-oe56.onrender.com](https://veritext-backend-oe56.onrender.com)
+* **API Endpoints Directory:** [https://veritext-backend-oe56.onrender.com/api](https://veritext-backend-oe56.onrender.com/api)
+* **Cloud Database:** MongoDB Atlas (Persistent Cloud Cluster)
+* **API Health Check:**
+  ```json
+  {
+    "success": true,
+    "message": "VeriText backend API is live and operational!",
+    "endpoints": {
+      "health": "/api/health",
+      "assignments": "/api/assignments",
+      "submissions": "/api/submissions",
+      "similarityReports": "/api/similarity-reports",
+      "students": "/api/students",
+      "instructors": "/api/instructors"
+    },
+    "database": "connected"
+  }
+  ```
 
-### Text Questions
+---
 
-Text answers are:
+## 📸 Screenshots & Verification
 
-1. Normalized
-2. Converted into word n-grams
-3. Compared using **Jaccard similarity**
+### 1. Render Cloud Deployment (Status: Live)
+![Render Deployment](docs/screenshots/render_deployment.png)
 
-The default implementation uses **3-word n-grams**.
+### 2. Live API Health & MongoDB Atlas Connectivity
+![API Health Check](docs/screenshots/api_health.png)
 
-Conceptually:
+### 3. Automated Cloud Build & Deploy Pipeline
+![Render Build Logs](docs/screenshots/render_build_logs.png)
+
+### 4. Continuous Evaluation Criteria Rubric
+![Evaluation Criteria](docs/screenshots/evaluation_criteria.png)
+
+---
+
+## 🏗️ Monorepo Project Structure
 
 ```text
-Jaccard Similarity =
-Intersection of shared n-grams
---------------------------------
-Union of all n-grams
-```
-
-### Code Questions
-
-Programming submissions use a tokenizer-based approach.
-
-The analyzer can consider:
-
-- Keywords
-- Identifiers / variable names
-- Operators
-- Literals
-- Comments
-- Token sequences
-- Token n-grams
-- Code structure
-- Formatting-normalized code
-
-Supported languages currently include:
-
-- Python
-- Java
-- C
-- C++
-- JavaScript
-
-The code similarity calculation combines multiple signals instead of relying on simple text matching.
-
----
-
-## 🏗️ Project Structure
-
-```text
-VeriText/
+The_Assignment_Plagiarism/
 │
-├── index.html                 # Landing page
-├── login.html                 # Instructor login
-├── signup.html                # Instructor registration
+├── backend/                                # Node.js / Express MVC Server
+│   ├── config/                             # Database & server configuration
+│   ├── controllers/                        # Business logic & request handlers
+│   │   ├── assignmentController.js         # Assignment CRUD & code generation
+│   │   ├── instructorController.js         # Instructor signup & JWT login
+│   │   ├── studentController.js            # Student signup & roll-number login
+│   │   ├── submissionController.js         # Text & Multer file submissions
+│   │   └── similarityReportController.js   # Pairwise n-gram report calculation
+│   ├── middleware/                         # Express middleware stack
+│   │   ├── authMiddleware.js               # JWT role validation (instructor/student)
+│   │   └── uploadMiddleware.js             # Multer in-memory storage for file uploads
+│   ├── models/                             # Mongoose database schemas
+│   │   ├── Assignment.js                   # Questions, constraints, thresholds
+│   │   ├── Instructor.js                   # Instructor profiles with bcrypt passwords
+│   │   ├── Student.js                      # Student profiles (roll number / email)
+│   │   ├── Submission.js                   # Student answers, file buffers, timestamps
+│   │   └── SimilarityReport.js             # Pairwise similarity matrix & flags
+│   ├── routes/                             # Modular REST API endpoints
+│   ├── utils/                              # Mathematical & algorithmic engines
+│   │   └── ngramSimilarity.js              # Server-side N-gram & Jaccard algorithm
+│   ├── .env.example                        # Template for environment variables
+│   ├── package.json                        # Backend dependencies & scripts
+│   └── server.js                           # Express application entry point (0.0.0.0)
 │
-├── instructor.html            # Instructor dashboard
-├── report.html                # Similarity report
+├── frontend/                               # React & Modern Web Frontend
+│   ├── css/                                # Global styles & responsive layouts
+│   ├── dist/                               # Production Vite bundle
+│   ├── js/                                 # API communication & UI rendering
+│   │   ├── instructor.js                   # Instructor dashboard & assignment forms
+│   │   ├── report.js                       # Similarity report UI, slider & comparison toggle
+│   │   ├── student.js                      # Student assignment viewer & submission form
+│   │   └── student-auth.js                 # Student login & session handling
+│   ├── public/                             # Static SVGs, icons, and assets
+│   ├── src/                                # React application source (Vite)
+│   │   ├── services/api.js                 # Cloud API integration layer
+│   │   ├── App.jsx                         # React dashboard root component
+│   │   └── main.jsx                        # React DOM mounting
+│   ├── index.html                          # Landing page
+│   ├── instructor.html                     # Instructor management dashboard
+│   ├── report.html                         # Detailed plagiarism report & comparison page
+│   ├── student.html                        # Student submission portal
+│   ├── login.html / signup.html            # Instructor authentication pages
+│   ├── student-login.html / signup.html    # Student authentication pages
+│   ├── package.json                        # Frontend dependencies (React, Vite)
+│   └── vite.config.js                      # Multi-page build configuration
 │
-├── student.html               # Student submission portal
-├── student-login.html         # Student login
-├── student-signup.html        # Student registration
+├── docs/                                   # Documentation & screenshots
+│   └── screenshots/                        # Live cloud deployment proofs
 │
-├── css/
-│   └── style.css              # Global UI and responsive styles
-│
-└── js/
-    ├── auth.js                # Instructor authentication/session guard
-    ├── instructor.js           # Dashboard and assignment management
-    ├── login.js                # Instructor login logic
-    ├── main.js                 # Main-page JavaScript entry point
-    ├── report.js               # Similarity report rendering/filtering
-    ├── signup.js               # Instructor registration
-    ├── similarity.js            # Text/code similarity engine
-    ├── student-auth.js          # Student authentication
-    └── student.js               # Student assignment/submission logic
+├── .gitignore                              # Protects secrets (.env) & build artifacts
+├── package.json                            # Root workspace scripts (runner)
+└── README.md                               # Project documentation
 ```
 
 ---
 
-## 🚀 How to Run
+## 🧠 Server-Side N-Gram Similarity Engine
 
-VeriText is a static frontend application, so no Node.js, database, or backend server is required.
+VeriText avoids brittle string matching by employing server-side **N-gram tokenization and Jaccard similarity scoring** in `backend/utils/ngramSimilarity.js`:
 
-### Option 1 — VS Code Live Server
+```text
+                        ┌────────────────────────────────┐
+                        │      Submitted Answers /       │
+                        │    Uploaded Solution Files     │
+                        └───────────────┬────────────────┘
+                                        │
+                                        ▼
+                        ┌────────────────────────────────┐
+                        │   Text & Code Normalization    │
+                        │ (strip comments, symbols, etc.)│
+                        └───────────────┬────────────────┘
+                                        │
+                                        ▼
+                        ┌────────────────────────────────┐
+                        │     N-Gram Tokenization        │
+                        │ (window size: 3-5 word/char)   │
+                        └───────────────┬────────────────┘
+                                        │
+                                        ▼
+                        ┌────────────────────────────────┐
+                        │  Jaccard Coefficient Scoring   │
+                        │   |Set A ∩ Set B| / |A ∪ B|    │
+                        └───────────────┬────────────────┘
+                                        │
+                                        ▼
+                        ┌────────────────────────────────┐
+                        │  Cross-Submission Pair Matrix  │
+                        │ (Flagged if Similarity >= Thr) │
+                        └────────────────────────────────┘
+```
 
-1. Open the `VeriText` folder in VS Code.
-2. Install the **Live Server** extension if it is not already installed.
-3. Open `index.html`.
-4. Right-click the file.
-5. Select **Open with Live Server**.
+1. **Normalization:** Strips variable casing, indentation differences, punctuation, and language comments (`//`, `/* */`, `#`).
+2. **Tokenization:** Breaks the stream into sequential n-grams (sub-sequences of $N$ tokens).
+3. **Set Intersection:** Measures the overlap of shared n-gram signatures between all submission pairs for a given assignment.
+4. **Dynamic Threshold Filtering:** Reports allow instructors to dynamically adjust the similarity threshold slider (0% to 100%) in real time to filter out low-probability matches and highlight high-risk pairs.
 
-The application will open in your browser.
+---
 
-### Option 2 — Python HTTP Server
+## 👥 Team Work Division (Continuous Evaluation 2)
 
-If Python is installed:
+| Contributor | GitHub Username | Work Share | Assigned Responsibilities & Deliverables |
+| :--- | :--- | :---: | :--- |
+| **Aarti Thakur** | `rt2407-08` | **40% (Lead)** | **Cloud Deployment & Full-Stack Integration:**<br>• Deployed Node.js Express backend to Render (`0.0.0.0` binding)<br>• MongoDB Atlas network whitelist & production environment management<br>• Replaced all local URLs with deployed cloud API across frontend<br>• Implemented real-time **Similarity Threshold Slider** & debounced comparison toggle<br>• Postman collection & team Git merge integration |
+| **Ishita Dahiya** | `ishitadahiya53-sys` | **30%** | **MVC Architecture & Database Models:**<br>• Designed Mongoose schemas (`Assignment`, `Submission`, `Student`, `Instructor`, `SimilarityReport`)<br>• Implemented student & instructor signup/login controllers<br>• Implemented JWT token generation with role scopes (`instructor`, `student`)<br>• Modular Express routing and request validation |
+| **Krrish Makkar** | `Krrish-1845` | **30%** | **Core Algorithm & File Pipeline:**<br>• Engineered server-side N-Gram tokenization and Jaccard similarity engine<br>• Configured Multer in-memory storage middleware for file uploads (`.java`, `.py`, `.cpp`, `.txt`)<br>• Built cross-submission pairwise comparison runner<br>• Created persistent similarity report controllers and submission extraction endpoints |
 
+---
+
+## 🌿 Git Branching & Feature Workflow
+
+The project strictly follows a feature-branch team workflow:
+
+* **`feature/mvc-architecture`** (Ishita Dahiya): Frontend restructuring, database models, and authentication controllers.
+* **`feature/similarity-algorithm`** (Krrish Makkar): N-gram tokenizer, Multer middleware, and pairwise comparison matrix.
+* **`feature/cloud-deployment-frontend`** (Aarti Thakur): Express production server, Render cloud deployment, live API wiring, and interactive threshold slider.
+* **`main`**: Production-ready branch containing merged feature branches with explicit merge commits.
+
+---
+
+## 📡 REST API Reference
+
+| Endpoint | Method | Auth | Description |
+| :--- | :---: | :---: | :--- |
+| `/` or `/api` | `GET` | Public | Live cloud health check and endpoints directory |
+| `/api/instructors/signup` | `POST` | Public | Register new instructor account |
+| `/api/instructors/login` | `POST` | Public | Authenticate instructor and return JWT token |
+| `/api/students/signup` | `POST` | Public | Register student (requires unique student ID and email) |
+| `/api/students/login` | `POST` | Public | Authenticate student via roll number or email |
+| `/api/assignments` | `GET` | Public | List all assignments with question counts |
+| `/api/assignments` | `POST` | Instructor | Create new assignment with questions and threshold |
+| `/api/assignments/code/:code` | `GET` | Public | Fetch assignment details by unique code (e.g. `VT-6D8RZ6`) |
+| `/api/submissions` | `POST` | Student | Submit assignment answers (supports JSON or multipart file upload) |
+| `/api/assignments/:id/similarity-report` | `GET` | Instructor | Compute and retrieve live server-side N-gram similarity report |
+
+---
+
+## 💻 How to Run Locally
+
+### 1. Prerequisites
+- **Node.js** v18 or higher
+- **npm** v9 or higher
+- **MongoDB Atlas** connection string (or local MongoDB on port 27017)
+
+### 2. Clone the Repository
 ```bash
-cd VeriText
-python3 -m http.server 5500
+git clone https://github.com/rt2407-08/The_Assignment_Plagiarism.git
+cd The_Assignment_Plagiarism
 ```
 
-Then open:
-
-```text
-http://localhost:5500
+### 3. Backend Setup
+```bash
+cd backend
+npm install
+cp .env.example .env
+```
+Fill in your `.env` configuration:
+```env
+PORT=5000
+MONGODB_URI=your_mongodb_atlas_connection_string
+JWT_SECRET=your_jwt_secret_key
+```
+Start the backend server:
+```bash
+npm start
+# Server runs on http://localhost:5000
 ```
 
-Using a local server is recommended instead of opening HTML files directly with `file://`.
-
----
-
-## 🔐 Authentication & Data Storage
-
-This project currently uses the browser's `localStorage` API instead of a backend database.
-
-Examples of stored application data include:
-
-```text
-veritext_students
-veritext_assignments
-veritext_logged_in
-veritext_current_user
-veritext_student_logged_in
-veritext_current_student
+### 4. Frontend Setup
+```bash
+cd ../frontend
+npm install
+npm run dev
+# Vite dev server runs on http://localhost:5173
 ```
 
-This makes the project easy to run locally, but it also means:
-
-- Data is specific to the current browser/device.
-- Clearing browser storage can remove project data.
-- There is no multi-user server-side synchronization.
-- Authentication is suitable for a prototype/demo, **not production security**.
-- Passwords should not be stored in plain browser storage in a production application.
-
----
-
-## 🔄 Application Flow
-
-### Instructor
-
-```text
-Landing Page
-     ↓
-Instructor Signup / Login
-     ↓
-Instructor Dashboard
-     ↓
-Create Assignment
-     ↓
-Generate Assignment Code
-     ↓
-Receive Student Submissions
-     ↓
-Open Similarity Report
-     ↓
-Compare Submission Pairs
-     ↓
-Review Question-wise Similarity
-```
-
-### Student
-
-```text
-Landing Page
-     ↓
-Student Signup / Login
-     ↓
-Student Portal
-     ↓
-Enter Assignment Code
-     ↓
-Load Assignment
-     ↓
-Answer Questions
-     ↓
-Submit Assignment
+### 5. Running from Root
+From the repository root, you can also run:
+```bash
+npm run server    # Starts backend server
+npm run client    # Starts frontend Vite dev server
 ```
 
 ---
 
-## 📊 Similarity Report
-
-The report page presents:
-
-- Number of submissions
-- Number of comparisons
-- Number of flagged pairs
-- Highest similarity percentage
-- Student A / Student B
-- Similarity percentage
-- Similarity status
-- Question-wise comparison
-- Analysis methodology
-
-The threshold selector allows instructors to filter the displayed similarity results.
-
----
-
-## 🎨 UI / Design
-
-VeriText uses a clean academic dashboard style with:
-
-- Teal / navy visual identity
-- Inter typography
-- Responsive layouts
-- Card-based dashboards
-- Landing-page hero section
-- Instructor and student portals
-- Similarity report cards
-- Progress indicators
-- Status labels
-
-The interface is designed to prioritize readability while keeping the platform visually modern.
-
----
-
-## 🛠️ Technology Stack
-
-| Technology | Purpose |
-|---|---|
-| HTML5 | Page structure |
-| CSS3 | Styling, layout, responsiveness |
-| Vanilla JavaScript | Application logic |
-| Browser `localStorage` | Local data persistence |
-| Google Fonts / Inter | Typography |
-
-No external frontend framework is required.
-
----
-
-## ⚠️ Current Limitations
-
-This is a frontend prototype, so it has some important limitations.
-
-### No Backend
-
-There is currently no:
-
-- REST API
-- Server
-- Database
-- Cloud storage
-- Server-side authentication
-
-### Local Browser Storage
-
-Assignments, accounts, and submissions are stored locally.
-
-Therefore, two different browsers will not automatically share the same data.
-
-### Prototype Authentication
-
-The authentication system demonstrates the application flow but is not suitable for a production deployment.
-
-For a real system, authentication should use:
-
-- Server-side sessions or secure tokens
-- Password hashing
-- HTTPS
-- Database-backed users
-- Access-control middleware
-
-### Similarity Is an Indicator, Not Proof
-
-A high similarity score should be treated as a signal for instructor review rather than automatic proof of plagiarism.
-
-Context, citations, common terminology, assignment requirements, and legitimate collaboration can all affect similarity.
-
----
-
-## 🔮 Recommended Future Improvements
-
-For a production-ready version, the next major improvements would be:
-
-1. **Backend API**
-   - Node.js / Express, Django, FastAPI, etc.
-
-2. **Database**
-   - PostgreSQL / MySQL / MongoDB
-
-3. **Secure authentication**
-   - Password hashing
-   - Session management
-   - Role-based access control
-
-4. **Persistent file storage**
-   - Store uploaded documents and code submissions securely.
-
-5. **Improved similarity engine**
-   - Semantic similarity using embeddings
-   - Better code-structure analysis
-   - Cross-language analysis
-   - Citation-aware matching
-
-6. **Instructor tools**
-   - Assignment editing
-   - Exportable reports
-   - Submission history
-   - Search and filtering
-   - Manual review notes
-
-7. **Student experience**
-   - Draft saving
-   - Submission history
-   - Deadline support
-   - Assignment status tracking
-
-8. **Deployment**
-   - Production backend
-   - HTTPS
-   - Database
-   - Secure environment configuration
-
----
-
-## 👥 Project Roles
-
-A possible team structure for this project:
-
-- **Frontend Development** — UI, pages, responsive design
-- **Similarity Engine** — text and code comparison algorithms
-- **Authentication & Data** — user flows and local persistence
-- **Instructor Dashboard** — assignment management and reports
-- **Testing & UI/UX** — usability, responsiveness, and visual consistency
-
----
-
-## 🧪 Testing Checklist
-
-Before demonstrating the project, verify:
-
-- [ ] Instructor can create an account
-- [ ] Instructor can log in
-- [ ] Instructor dashboard loads correctly
-- [ ] Assignment creation works
-- [ ] Assignment code is generated
-- [ ] Student can create an account
-- [ ] Student can log in
-- [ ] Student can access an assignment using its code
-- [ ] Student can submit answers
-- [ ] Submission count updates
-- [ ] Similarity report opens
-- [ ] Similarity percentage is displayed
-- [ ] Question-wise similarity is displayed
-- [ ] Threshold filtering works
-- [ ] Logout works for both roles
-- [ ] Report layout remains readable at different screen sizes
-
----
-
-## 📄 License
-
-This project is intended as an academic / educational project.
-
-If you plan to publish or deploy it commercially, add an appropriate software license and review the licensing requirements of any third-party assets or services used by the project.
-
----
-
-## 👤 About VeriText
-
-**VeriText** is designed around a simple idea:
-
-> **Make every submission count.**
-
-Instead of replacing instructor judgment, the platform helps instructors identify meaningful similarity patterns so they can spend less time searching and more time reviewing.
+## 📄 License & Academic Integrity
+This project is developed for educational and academic evaluation purposes. Built with ❤️ by Aarti Thakur, Ishita Dahiya, and Krrish Makkar.
