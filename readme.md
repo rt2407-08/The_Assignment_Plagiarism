@@ -309,5 +309,14 @@ The project strictly follows a feature-branch team workflow:
 
 ---
 
+## 🔗 Live Application Links
+
+* **Production Backend Service:** [https://veritext-backend-oe56.onrender.com](https://veritext-backend-oe56.onrender.com)
+* **API Endpoints Directory & Health:** [https://veritext-backend-oe56.onrender.com/api](https://veritext-backend-oe56.onrender.com/api)
+* **Sample Live Similarity Report:** [https://veritext-backend-oe56.onrender.com/api/assignments/VT-6D8RZ6/similarity-report](https://veritext-backend-oe56.onrender.com/api/assignments/VT-6D8RZ6/similarity-report)
+* **Assignments API Endpoint:** [https://veritext-backend-oe56.onrender.com/api/assignments](https://veritext-backend-oe56.onrender.com/api/assignments)
+
+---
+
 ## 📄 License & Academic Integrity
 This project is developed for educational and academic evaluation purposes. Built with ❤️ by Aarti Thakur, Ishita Dahiya, and Krrish Makkar.
