@@ -46,9 +46,6 @@ VeriText is a full-stack academic integrity and source code / text similarity re
 ### 3. Automated Cloud Build & Deploy Pipeline
 ![Render Build Logs](docs/screenshots/render_build_logs.png)
 
-### 4. Continuous Evaluation Criteria Rubric
-![Evaluation Criteria](docs/screenshots/evaluation_criteria.png)
-
 ---
 
 ## 🏗️ Monorepo Project Structure
@@ -154,13 +151,11 @@ VeriText avoids brittle string matching by employing server-side **N-gram tokeni
 
 ---
 
-## 👥 Team Work Division (Continuous Evaluation 2)
+## 👥 Contributors
 
-| Contributor | GitHub Username | Work Share | Assigned Responsibilities & Deliverables |
-| :--- | :--- | :---: | :--- |
-| **Aarti Thakur** | `rt2407-08` | **40% (Lead)** | **Cloud Deployment & Full-Stack Integration:**<br>• Deployed Node.js Express backend to Render (`0.0.0.0` binding)<br>• MongoDB Atlas network whitelist & production environment management<br>• Replaced all local URLs with deployed cloud API across frontend<br>• Implemented real-time **Similarity Threshold Slider** & debounced comparison toggle<br>• Postman collection & team Git merge integration |
-| **Ishita Dahiya** | `ishitadahiya53-sys` | **30%** | **MVC Architecture & Database Models:**<br>• Designed Mongoose schemas (`Assignment`, `Submission`, `Student`, `Instructor`, `SimilarityReport`)<br>• Implemented student & instructor signup/login controllers<br>• Implemented JWT token generation with role scopes (`instructor`, `student`)<br>• Modular Express routing and request validation |
-| **Krrish Makkar** | `Krrish-1845` | **30%** | **Core Algorithm & File Pipeline:**<br>• Engineered server-side N-Gram tokenization and Jaccard similarity engine<br>• Configured Multer in-memory storage middleware for file uploads (`.java`, `.py`, `.cpp`, `.txt`)<br>• Built cross-submission pairwise comparison runner<br>• Created persistent similarity report controllers and submission extraction endpoints |
+* **Aarti Thakur** ([@rt2407-08](https://github.com/rt2407-08))
+* **Ishita Dahiya** ([@ishitadahiya53-sys](https://github.com/ishitadahiya53-sys))
+* **Krrish Makkar** ([@Krrish-1845](https://github.com/Krrish-1845))
 
 ---
 
