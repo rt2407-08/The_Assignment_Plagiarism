@@ -2,10 +2,26 @@ const mongoose = require("mongoose");
 
 const similarityReportSchema = new mongoose.Schema(
   {
+    assignmentId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Assignment",
+      required: false
+    },
+
     submissionId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Submission",
-      required: true
+      required: false
+    },
+
+    studentA: {
+      type: String,
+      default: ""
+    },
+
+    studentB: {
+      type: String,
+      default: ""
     },
 
     similarityPercentage: {
@@ -22,8 +38,13 @@ const similarityReportSchema = new mongoose.Schema(
 
     status: {
       type: String,
-      enum: ["Pending", "Completed"],
+      enum: ["Pending", "Completed", "LOW", "MEDIUM", "HIGH"],
       default: "Completed"
+    },
+
+    details: {
+      type: mongoose.Schema.Types.Mixed,
+      default: null
     }
   },
   {

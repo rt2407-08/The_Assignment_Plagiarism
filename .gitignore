@@ -15,5 +15,8 @@ build/
 *.log
 npm-debug.log*
 
+# Archives
+*.zip
+
 # Operating system files
 .DS_Store

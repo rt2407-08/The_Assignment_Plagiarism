@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Instructor Login | VeriText</title>
+
+
+    <!-- GOOGLE FONT -->
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+
+    <link
+        rel="preconnect"
+        href="https://fonts.gstatic.com"
+        crossorigin
+    >
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet"
+    >
+
+
+    <!-- MAIN CSS -->
+
+    <link
+        rel="stylesheet"
+        href="css/style.css"
+    >
+
+</head>
+
+
+<body>
+
+
+<!-- =====================================
+     NAVBAR
+===================================== -->
+
+<header class="navbar">
+
+    <div class="nav-container">
+
+
+        <!-- LOGO -->
+
+        <a
+            href="index.html"
+            class="logo"
+        >
+
+            <span class="logo-icon">
+                ✓
+            </span>
+
+            <span>
+                Veri<span class="logo-blue">Text</span>
+            </span>
+
+        </a>
+
+
+        <!-- NAV -->
+
+        <nav class="nav-links">
+
+            <a href="index.html">
+                Home
+            </a>
+
+        </nav>
+
+    </div>
+
+</header>
+
+
+
+<!-- =====================================
+     LOGIN PAGE
+===================================== -->
+
+<main class="auth-page">
+
+    <div class="auth-container">
+
+
+        <!-- HEADER -->
+
+        <div class="auth-header">
+
+            <span class="section-tag">
+                INSTRUCTOR PORTAL
+            </span>
+
+            <h1>
+                Welcome back
+            </h1>
+
+            <p>
+                Log in to manage your assignments
+                and review similarity results.
+            </p>
+
+        </div>
+
+
+
+        <!-- LOGIN CARD -->
+
+        <div class="auth-card">
+
+            <form id="loginForm">
+
+
+                <!-- EMAIL -->
+
+                <div class="form-group">
+
+                    <label for="loginEmail">
+                        Email address
+                    </label>
+
+                    <input
+                        type="email"
+                        id="loginEmail"
+                        placeholder="instructor@example.com"
+                        autocomplete="email"
+                        required
+                    >
+
+                </div>
+
+
+
+                <!-- PASSWORD -->
+
+                <div class="form-group">
+
+                    <label for="loginPassword">
+                        Password
+                    </label>
+
+                    <input
+                        type="password"
+                        id="loginPassword"
+                        placeholder="Enter your password"
+                        autocomplete="current-password"
+                        required
+                    >
+
+                </div>
+
+
+
+                <!-- ERROR / SUCCESS MESSAGE -->
+
+                <div
+                    id="loginError"
+                    class="auth-message"
+                ></div>
+
+
+
+                <!-- LOGIN BUTTON -->
+
+                <button
+                    type="submit"
+                    class="primary-btn auth-submit"
+                >
+
+                    Log in
+
+                    <span>
+                        →
+                    </span>
+
+                </button>
+
+
+            </form>
+
+
+
+            <!-- SIGNUP -->
+
+            <div class="auth-footer">
+
+                <p>
+                    Don't have an instructor account?
+                </p>
+
+                <a href="signup.html">
+                    Create account
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</main>
+
+
+
+<!-- =====================================
+     LOGIN JAVASCRIPT
+===================================== -->
+
+<script src="js/login.js"></script>
+
+
+</body>
+
+</html>

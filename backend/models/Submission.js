@@ -26,6 +26,11 @@ const submissionSchema = new mongoose.Schema(
       required: true
     },
 
+    fileName: {
+      type: String,
+      default: null
+    },
+
     submittedAt: {
       type: Date,
       default: Date.now

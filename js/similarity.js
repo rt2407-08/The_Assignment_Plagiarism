@@ -1937,292 +1937,112 @@ function compareQuestionAnswers(
 // COMPARE TWO SUBMISSIONS
 // =====================================
 
-function compareSubmissions(
-    submissionA,
-    submissionB
-) {
+function compareSubmissions(submissionA, submissionB) {
+    const answersA = getSubmissionAnswers(submissionA);
+    const answersB = getSubmissionAnswers(submissionB);
 
-    const answersA =
-        getSubmissionAnswers(
-            submissionA
-        );
+    const questionResults = [];
+    const questionNumbers = new Set();
 
+    // Get question numbers from both submissions
+    answersA.forEach(function (answer) {
+        questionNumbers.add(Number(answer.questionNumber));
+    });
 
-    const answersB =
-        getSubmissionAnswers(
-            submissionB
-        );
+    answersB.forEach(function (answer) {
+        questionNumbers.add(Number(answer.questionNumber));
+    });
 
-
-    const questionResults =
-        [];
-
-
-
-    // =================================
-    // GET QUESTION NUMBERS
-    // =================================
-
-    const questionNumbers =
-        new Set();
-
-
-
-    answersA.forEach(
-        function (answer) {
-
-            questionNumbers.add(
-                Number(
-                    answer.questionNumber
-                )
-            );
-
+    // Sort questions numerically
+    const sortedQuestionNumbers = Array.from(questionNumbers).sort(
+        function (a, b) {
+            return a - b;
         }
     );
 
-
-    answersB.forEach(
-        function (answer) {
-
-            questionNumbers.add(
-                Number(
-                    answer.questionNumber
-                )
-            );
-
-        }
-    );
-
-
-
-    // =================================
-    // SORT QUESTIONS
-    // =================================
-
-    const sortedQuestionNumbers =
-        Array.from(
-            questionNumbers
-        ).sort(
-            function (a, b) {
-
-                return a - b;
-
-            }
+    // Compare answers for the same question
+    sortedQuestionNumbers.forEach(function (questionNumber) {
+        const answerA = findQuestionAnswer(
+            answersA,
+            questionNumber
         );
 
-
-
-    // =================================
-    // COMPARE SAME QUESTION
-    // =================================
-
-    sortedQuestionNumbers.forEach(
-        function (questionNumber) {
-
-            const answerA =
-                findQuestionAnswer(
-                    answersA,
-                    questionNumber
-                );
-
-
-            const answerB =
-                findQuestionAnswer(
-                    answersB,
-                    questionNumber
-                );
-
-
-            const result =
-                compareQuestionAnswers(
-
-                    answerA,
-
-                    answerB,
-
-                    questionNumber
-
-                );
-
-
-            questionResults.push(
-                result
-            );
-
-        }
-    );
-
-
-
-    // =================================
-    // CALCULATE OVERALL SIMILARITY
-    // =================================
-
-    let totalSimilarity =
-        0;
-
-
-    if (
-        questionResults.length > 0
-    ) {
-
-        questionResults.forEach(
-            function (result) {
-
-                totalSimilarity +=
-                    result.similarity;
-
-            }
+        const answerB = findQuestionAnswer(
+            answersB,
+            questionNumber
         );
 
+        const result = compareQuestionAnswers(
+            answerA,
+            answerB,
+            questionNumber
+        );
 
-        totalSimilarity =
-            totalSimilarity /
-            questionResults.length;
+        questionResults.push(result);
+    });
 
+    // Calculate overall similarity
+    let totalSimilarity = 0;
+
+    if (questionResults.length > 0) {
+        questionResults.forEach(function (result) {
+            totalSimilarity += result.similarity;
+        });
+
+        totalSimilarity = totalSimilarity / questionResults.length;
     }
 
+    // Find the question with the highest similarity
+    let highestQuestion = null;
 
-
-    // =================================
-    // HIGHEST QUESTION
-    // =================================
-
-    let highestQuestion =
-        null;
-
-
-    if (
-        questionResults.length > 0
-    ) {
-
-        highestQuestion =
-            questionResults.reduce(
-                function (
-                    highest,
-                    current
-                ) {
-
-                    if (
-                        current.similarity >
-                        highest.similarity
-                    ) {
-
-                        return current;
-
-                    }
-
-
-                    return highest;
-
+    if (questionResults.length > 0) {
+        highestQuestion = questionResults.reduce(
+            function (highest, current) {
+                if (current.similarity > highest.similarity) {
+                    return current;
                 }
-            );
 
+                return highest;
+            }
+        );
     }
 
+    // Separate code question results
+    const codeResults = questionResults.filter(function (result) {
+        return result.type === "code";
+    });
 
+    // Separate text question results
+    const textResults = questionResults.filter(function (result) {
+        return result.type === "text";
+    });
 
-    // =================================
-    // CODE QUESTION RESULTS
-    // =================================
-
-    const codeResults =
-        questionResults.filter(
-            function (result) {
-
-                return (
-                    result.type ===
-                    "code"
-                );
-
-            }
-        );
-
-
-
-    // =================================
-    // TEXT QUESTION RESULTS
-    // =================================
-
-    const textResults =
-        questionResults.filter(
-            function (result) {
-
-                return (
-                    result.type ===
-                    "text"
-                );
-
-            }
-        );
-
-
-
-    // =================================
-    // RETURN RESULT
-    // =================================
-
+    // Return comparison results
     return {
+        studentA: submissionA.studentName,
+        studentB: submissionB.studentName,
 
-        studentA:
-            submissionA.studentName,
+        studentIdA: submissionA.studentId,
+        studentIdB: submissionB.studentId,
 
-        studentB:
-            submissionB.studentName,
+        // Unique indices used to identify the original submissions
+        submissionIndexA: submissionA.submissionIndex ?? null,
+        submissionIndexB: submissionB.submissionIndex ?? null,
 
+        // Overall similarity
+        similarity: totalSimilarity,
+        percentage: Math.round(totalSimilarity * 100),
 
-        studentIdA:
-            submissionA.studentId,
+        // Question-wise results
+        questionResults: questionResults,
 
-        studentIdB:
-            submissionB.studentId,
+        // Highest similarity question
+        highestQuestion: highestQuestion,
 
-
-
-        // =================================
-        // OVERALL
-        // =================================
-
-        similarity:
-            totalSimilarity,
-
-        percentage:
-            Math.round(
-                totalSimilarity * 100
-            ),
-
-
-
-        // =================================
-        // QUESTION RESULTS
-        // =================================
-
-        questionResults:
-            questionResults,
-
-
-
-        // =================================
-        // HIGHEST QUESTION
-        // =================================
-
-        highestQuestion:
-            highestQuestion,
-
-
-
-        // =================================
-        // SEPARATE RESULTS
-        // =================================
-
-        codeResults:
-            codeResults,
-
-        textResults:
-            textResults
-
+        // Separate code and text results
+        codeResults: codeResults,
+        textResults: textResults
     };
-
 }
 
 

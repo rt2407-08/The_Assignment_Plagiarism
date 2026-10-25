@@ -4,13 +4,21 @@ const router = express.Router();
 
 const {
   getAllAssignments,
-  createAssignment
+  getAssignmentByCode,
+  createAssignment,
+  updateAssignment,
+  deleteAssignment
 } = require("../controllers/assignmentController");
 
-// GET /api/assignments
-router.get("/", getAllAssignments);
+const {
+  getAssignmentSimilarityReport
+} = require("../controllers/similarityReportController");
 
-// POST /api/assignments
+router.get("/", getAllAssignments);
+router.get("/code/:code", getAssignmentByCode);
+router.get("/:id/similarity-report", getAssignmentSimilarityReport);
 router.post("/", createAssignment);
+router.patch("/:id", updateAssignment);
+router.delete("/:id", deleteAssignment);
 
 module.exports = router;

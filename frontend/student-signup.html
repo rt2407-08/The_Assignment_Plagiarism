@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Create Student Account | VeriText</title>
+
+
+    <!-- GOOGLE FONT -->
+
+    <link
+        rel="preconnect"
+        href="https://fonts.googleapis.com"
+    >
+
+    <link
+        rel="preconnect"
+        href="https://fonts.gstatic.com"
+        crossorigin
+    >
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet"
+    >
+
+
+    <!-- MAIN CSS -->
+
+    <link
+        rel="stylesheet"
+        href="css/style.css"
+    >
+
+</head>
+
+
+<body>
+
+
+<!-- =====================================
+     NAVBAR
+===================================== -->
+
+<header class="navbar">
+
+    <div class="nav-container">
+
+
+        <!-- LOGO -->
+
+        <a
+            href="index.html"
+            class="logo"
+        >
+
+            <span class="logo-icon">
+                ✓
+            </span>
+
+            <span>
+                Veri<span class="logo-blue">Text</span>
+            </span>
+
+        </a>
+
+
+        <!-- NAVIGATION -->
+
+        <nav class="nav-links">
+
+            <a href="index.html">
+                Home
+            </a>
+
+        </nav>
+
+
+    </div>
+
+</header>
+
+
+
+<!-- =====================================
+     STUDENT SIGNUP PAGE
+===================================== -->
+
+<main class="auth-page">
+
+    <div class="auth-container">
+
+
+        <!-- HEADER -->
+
+        <div class="auth-header">
+
+            <span class="section-tag">
+                STUDENT PORTAL
+            </span>
+
+            <h1>
+                Create your account
+            </h1>
+
+            <p>
+                Create your student account to submit
+                assignments and view your submissions.
+            </p>
+
+        </div>
+
+
+
+        <!-- SIGNUP CARD -->
+
+        <div class="auth-card">
+
+            <form id="studentSignupForm">
+
+
+                <!-- FULL NAME -->
+
+                <div class="form-group">
+
+                    <label for="studentSignupName">
+                        Full name
+                    </label>
+
+                    <input
+                        type="text"
+                        id="studentSignupName"
+                        placeholder="e.g. Aarti Thakur"
+                        autocomplete="name"
+                        required
+                    >
+
+                </div>
+
+
+
+                <!-- STUDENT ID -->
+
+                <div class="form-group">
+
+                    <label for="studentSignupId">
+                        Student ID
+                    </label>
+
+                    <input
+                        type="text"
+                        id="studentSignupId"
+                        placeholder="e.g. CSE202601"
+                        required
+                    >
+
+                </div>
+
+
+
+                <!-- EMAIL -->
+
+                <div class="form-group">
+
+                    <label for="studentSignupEmail">
+                        Email address
+                    </label>
+
+                    <input
+                        type="email"
+                        id="studentSignupEmail"
+                        placeholder="student@example.com"
+                        autocomplete="email"
+                        required
+                    >
+
+                </div>
+
+
+
+                <!-- PASSWORD -->
+
+                <div class="form-group">
+
+                    <label for="studentSignupPassword">
+                        Password
+                    </label>
+
+                    <input
+                        type="password"
+                        id="studentSignupPassword"
+                        placeholder="Create a password"
+                        minlength="6"
+                        autocomplete="new-password"
+                        required
+                    >
+
+                </div>
+
+
+
+                <!-- CONFIRM PASSWORD -->
+
+                <div class="form-group">
+
+                    <label for="studentConfirmPassword">
+                        Confirm password
+                    </label>
+
+                    <input
+                        type="password"
+                        id="studentConfirmPassword"
+                        placeholder="Enter password again"
+                        minlength="6"
+                        autocomplete="new-password"
+                        required
+                    >
+
+                </div>
+
+
+
+                <!-- ERROR / SUCCESS -->
+
+                <div
+                    id="studentSignupError"
+                    class="auth-message"
+                    aria-live="polite"
+                ></div>
+
+
+
+                <!-- CREATE ACCOUNT -->
+
+                <button
+                    type="submit"
+                    class="primary-btn auth-submit"
+                >
+
+                    Create account
+
+                    <span>
+                        →
+                    </span>
+
+                </button>
+
+
+            </form>
+
+
+
+            <!-- LOGIN FOOTER -->
+
+            <div class="auth-footer">
+
+                <p>
+                    Already have a student account?
+                </p>
+
+                <a href="student-login.html">
+                    Log in
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</main>
+
+
+
+<!-- JAVASCRIPT -->
+
+<script src="js/student-auth.js"></script>
+
+
+</body>
+
+</html>
