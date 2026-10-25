@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>VeriText - API Testing & Continuous Evaluation Report</title>
+<style>
+  @page {
+    size: A4;
+    margin: 18mm 16mm 18mm 16mm;
+  }
+  * {
+    box-sizing: border-box;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    color: #1e293b;
+    background: #ffffff;
+    line-height: 1.5;
+    font-size: 11pt;
+    margin: 0;
+    padding: 0;
+  }
+  
+  /* Header banner */
+  .header {
+    border-bottom: 2px solid #0f2747;
+    padding-bottom: 14px;
+    margin-bottom: 22px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+  }
+  .title-group h1 {
+    font-size: 22pt;
+    color: #0f2747;
+    margin: 0 0 4px 0;
+    font-weight: 800;
+  }
+  .title-group p {
+    font-size: 11pt;
+    color: #64748b;
+    margin: 0;
+  }
+  .meta-badge {
+    text-align: right;
+    font-size: 9.5pt;
+    color: #475569;
+  }
+  .badge-tag {
+    display: inline-block;
+    background: #0f2747;
+    color: #ffffff;
+    font-weight: 700;
+    padding: 3px 10px;
+    border-radius: 4px;
+    font-size: 9pt;
+    margin-bottom: 4px;
+  }
+
+  /* Section Headings */
+  h2 {
+    font-size: 14pt;
+    color: #0f2747;
+    border-left: 4px solid #2563eb;
+    padding-left: 10px;
+    margin: 22px 0 10px 0;
+    page-break-after: avoid;
+  }
+  h3 {
+    font-size: 11.5pt;
+    color: #1e293b;
+    margin: 14px 0 6px 0;
+    page-break-after: avoid;
+  }
+
+  /* Tables */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 10px 0 16px 0;
+    font-size: 9.5pt;
+  }
+  th {
+    background: #f1f5f9;
+    color: #0f2747;
+    text-align: left;
+    padding: 8px 10px;
+    font-weight: 700;
+    border: 1px solid #cbd5e1;
+  }
+  td {
+    padding: 7px 10px;
+    border: 1px solid #e2e8f0;
+    vertical-align: top;
+  }
+  tr:nth-child(even) td {
+    background: #f8fafc;
+  }
+  
+  .status-pill {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 8.5pt;
+    font-weight: 700;
+  }
+  .status-done {
+    background: #dcfce7;
+    color: #166534;
+  }
+  .status-ready {
+    background: #e0f2fe;
+    color: #0369a1;
+  }
+
+  /* Code blocks */
+  pre {
+    background: #f8fafc;
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+    padding: 10px 12px;
+    font-family: ui-monospace, Menlo, Consolas, monospace;
+    font-size: 8.5pt;
+    line-height: 1.45;
+    color: #0f172a;
+    overflow-x: hidden;
+    white-space: pre-wrap;
+    word-break: break-all;
+    margin: 6px 0 12px 0;
+  }
+  .http-method {
+    font-weight: 800;
+    display: inline-block;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 8.5pt;
+    margin-right: 6px;
+  }
+  .method-post {
+    background: #fef3c7;
+    color: #92400e;
+  }
+  .method-get {
+    background: #e0e7ff;
+    color: #3730a3;
+  }
+  
+  .card {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 12px 14px;
+    margin-bottom: 14px;
+    page-break-inside: avoid;
+  }
+  .card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+    border-bottom: 1px solid #f1f5f9;
+    padding-bottom: 6px;
+  }
+  .card-title {
+    font-weight: 700;
+    font-size: 10.5pt;
+    color: #0f2747;
+  }
+
+  /* Callout box */
+  .callout {
+    background: #eff6ff;
+    border-left: 4px solid #2563eb;
+    padding: 10px 14px;
+    border-radius: 4px;
+    font-size: 9.5pt;
+    margin: 12px 0;
+  }
+
+  .page-break {
+    page-break-before: always;
+  }
+</style>
+</head>
+<body>
+
+  <!-- PAGE 1: TITLE & EVALUATION SCORECARD -->
+  <div class="header">
+    <div class="title-group">
+      <h1>VeriText</h1>
+      <p>Academic Integrity & Assignment Plagiarism Detection Platform</p>
+    </div>
+    <div class="meta-badge">
+      <div class="badge-tag">CONTINUOUS EVALUATION 2</div>
+      <div>Backend, MVC, N-Gram & API Testing</div>
+      <div>Date: October 2026</div>
+    </div>
+  </div>
+
+  <h2>1. Evaluation Requirements Scorecard</h2>
+  <p>Status summary of all required guidelines for Continuous Evaluation 2:</p>
+
+  <table>
+    <thead>
+      <tr>
+        <th style="width: 28%;">Evaluation Requirement</th>
+        <th style="width: 20%;">Current Status</th>
+        <th style="width: 52%;">Details</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>1. Backend Development</strong></td>
+        <td><span class="status-pill status-done">COMPLETED LOCALLY</span></td>
+        <td>Node.js & Express server built with MVC, CRUD for assignments & submissions, and server-side N-gram similarity engine.</td>
+      </tr>
+      <tr>
+        <td><strong>2. MVC Architecture</strong></td>
+        <td><span class="status-pill status-done">COMPLETED LOCALLY</span></td>
+        <td>Strict separation into <strong>Models</strong> (<code>backend/models/</code>), <strong>Controllers</strong> (<code>backend/controllers/</code>), and <strong>Routes</strong> (<code>backend/routes/</code>).</td>
+      </tr>
+      <tr>
+        <td><strong>3. Backend Deployment</strong></td>
+        <td><span class="status-pill status-ready" style="background:#fee2e2; color:#991b1b;">NOT DONE YET</span></td>
+        <td>Cloud hosting on Render is <strong>pending</strong>. Will be deployed after your 3 teammates push and merge their code.</td>
+      </tr>
+      <tr>
+        <td><strong>4. API Testing</strong></td>
+        <td><span class="status-pill status-done">DONE ON LOCALHOST</span></td>
+        <td>All endpoints tested and verified locally on Postman using <code>http://127.0.0.1:5000</code>. Cloud URL testing will be done after deployment.</td>
+      </tr>
+      <tr>
+        <td><strong>5. Frontend Integration</strong></td>
+        <td><span class="status-pill status-ready" style="background:#fee2e2; color:#991b1b;">NOT DONE YET</span></td>
+        <td>MongoDB Atlas database is connected, but <strong>replacing local URL with deployed cloud URL is NOT done yet</strong> (waiting for cloud deployment).</td>
+      </tr>
+      <tr>
+        <td><strong>6. GitHub Repository</strong></td>
+        <td><span class="status-pill status-ready" style="background:#fef3c7; color:#92400e;">PUSH PENDING</span></td>
+        <td>Remote repository is kept clean. Code is ready locally and will be pushed once divided among the 3 team members.</td>
+      </tr>
+      <tr>
+        <td><strong>7. Project Structure</strong></td>
+        <td><span class="status-pill status-done">COMPLETED</span></td>
+        <td>Both <code>backend/</code> and <code>frontend/</code> folders exist together in the same repository root.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2>2. Postman Collection Guide</h2>
+  <div class="callout">
+    <strong>📁 Collection File:</strong> <code>VeriText_API_Testing.postman_collection.json</code><br>
+    This pre-built file contains all required API endpoints with pre-filled request bodies, headers, and environment variables.
+  </div>
+
+  <h3>How to Import in 3 Clicks (For Team Members & Evaluator):</h3>
+  <ol style="font-size: 10pt; line-height: 1.6; padding-left: 20px;">
+    <li>Open the <strong>Postman</strong> app on your desktop.</li>
+    <li>Click the <strong>Import</strong> button in the top-left navigation bar.</li>
+    <li>Drag and drop <code>VeriText_API_Testing.postman_collection.json</code> into the window.</li>
+  </ol>
+  <p style="font-size: 9.5pt; color: #475569;">
+    A folder titled <strong>"VeriText - Assignment Plagiarism API Testing"</strong> will appear on the left sidebar. Simply click any request and hit the blue <strong>Send</strong> button to test live!
+  </p>
+
+  <h2>3. Team Contribution Breakdown (3 Members)</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Member</th>
+        <th>Assigned Area</th>
+        <th>Key Responsibilities</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Member 1</strong></td>
+        <td>Backend & Database Architecture</td>
+        <td>Mongoose schemas (<code>Assignment</code>, <code>Submission</code>, <code>SimilarityReport</code>), MVC routing, MongoDB Atlas connection.</td>
+      </tr>
+      <tr>
+        <td><strong>Member 2</strong></td>
+        <td>Plagiarism Engine & API Testing</td>
+        <td>Server-side N-Gram (3-gram + Jaccard) algorithm, Multer file upload handling, Postman testing demonstration.</td>
+      </tr>
+      <tr>
+        <td><strong>Member 3</strong></td>
+        <td>Frontend & Cloud Deployment</td>
+        <td>React Dashboard with state-driven threshold slider, side-by-side answer comparisons, Render cloud deployment.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- PAGE 2: LIVE API TESTING EVIDENCE -->
+  <div class="page-break"></div>
+
+  <h2>4. Verified API Testing Evidence (Postman / Thunder Client)</h2>
+  <p>The following tests were executed against the live VeriText backend and MongoDB Atlas:</p>
+
+  <!-- TEST 1 -->
+  <div class="card">
+    <div class="card-header">
+      <span class="card-title">Test 1: Submit Assignment via JSON</span>
+      <span class="status-pill status-done">201 Created</span>
+    </div>
+    <div><span class="http-method method-post">POST</span> <code>http://127.0.0.1:5000/api/submissions</code></div>
+    <div style="margin-top: 6px; font-weight: 700; font-size: 8.5pt;">Request Body (raw JSON):</div>
+<pre>{
+  "assignmentId": "6ade15f0c083d01645fb3d17",
+  "studentName": "Rohan Verma",
+  "studentId": "2410993161",
+  "content": "Question 1 (Java):\nQuestion: writee a code\nAnswer:\nyesss"
+}</pre>
+    <div style="font-weight: 700; font-size: 8.5pt;">Live Server Response:</div>
+<pre>{
+  "success": true,
+  "message": "Submission saved successfully",
+  "submission": {
+    "assignmentId": "6ade15f0c083d01645fb3d17",
+    "studentName": "Rohan Verma",
+    "studentId": "2410993161",
+    "_id": "6ade2fda84d7da25b8f58328",
+    "submittedAt": "2026-10-25T16:35:38.603Z"
+  }
+}</pre>
+  </div>
+
+  <!-- TEST 2 -->
+  <div class="card">
+    <div class="card-header">
+      <span class="card-title">Test 2: Multer File Upload Variant</span>
+      <span class="status-pill status-done">201 Created</span>
+    </div>
+    <div><span class="http-method method-post">POST</span> <code>http://127.0.0.1:5000/api/submissions</code> (multipart/form-data)</div>
+    <div style="margin-top: 6px; font-weight: 700; font-size: 8.5pt;">Form Data Fields:</div>
+    <ul style="font-size: 8.5pt; margin: 4px 0 8px 0; padding-left: 20px;">
+      <li><code>assignmentId</code>: 6ade15f0c083d01645fb3d17</li>
+      <li><code>studentName</code>: Priya Singh (ID: 2410993162)</li>
+      <li><code>file</code>: [Attached File: <code>solution.java</code>]</li>
+    </ul>
+    <div style="font-weight: 700; font-size: 8.5pt;">Live Server Response (Buffer Extracted):</div>
+<pre>{
+  "success": true,
+  "message": "Submission saved successfully",
+  "submission": {
+    "studentName": "Priya Singh",
+    "fileName": "solution.java",
+    "content": "Question 1 (Java):\nQuestion: writee a code\nAnswer:\nSee attached file\n\n[Uploaded File: solution.java]\npublic class Solution { ... }"
+  }
+}</pre>
+  </div>
+
+  <!-- TEST 3 -->
+  <div class="card">
+    <div class="card-header">
+      <span class="card-title">Test 3: Server-Side N-Gram Similarity Report</span>
+      <span class="status-pill status-done">200 OK</span>
+    </div>
+    <div><span class="http-method method-get">GET</span> <code>http://127.0.0.1:5000/api/assignments/VT-6D8RZ6/similarity-report</code></div>
+    <div style="margin-top: 6px; font-weight: 700; font-size: 8.5pt;">Live Server Response (Server-Side N-gram Algorithm):</div>
+<pre>{
+  "success": true,
+  "report": {
+    "assignmentCode": "VT-6D8RZ6",
+    "totalSubmissions": 3,
+    "totalComparisons": 3,
+    "flaggedCount": 1,
+    "averageSimilarity": 33,
+    "highestSimilarity": 100,
+    "flaggedPairs": [
+      {
+        "studentA": "Rohan Verma (2410993161)",
+        "studentB": "AARTI THAKUR (2410993160)",
+        "similarity": 100,
+        "status": "HIGH",
+        "questionDetails": [{ "questionIndex": 1, "similarity": 100 }]
+      }
+    ]
+  }
+}</pre>
+  </div>
+
+  <!-- PAGE 3: AUTHENTICATION & DEPLOYMENT GUIDE -->
+  <div class="page-break"></div>
+
+  <!-- TEST 4 -->
+  <div class="card">
+    <div class="card-header">
+      <span class="card-title">Test 4: Instructor Login & Role Verification</span>
+      <span class="status-pill status-done">200 OK</span>
+    </div>
+    <div><span class="http-method method-post">POST</span> <code>http://127.0.0.1:5000/api/instructors/login</code></div>
+    <div style="margin-top: 6px; font-weight: 700; font-size: 8.5pt;">Request Body:</div>
+<pre>{
+  "email": "proftest@university.edu",
+  "password": "Password123!"
+}</pre>
+    <div style="font-weight: 700; font-size: 8.5pt;">Live Server Response (JWT Token & Role):</div>
+<pre>{
+  "success": true,
+  "message": "Login successful.",
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+  "instructor": {
+    "id": "6ade311284d7da25b8f5832c",
+    "name": "Prof Test",
+    "email": "proftest@university.edu",
+    "role": "instructor"
+  }
+}</pre>
+  </div>
+
+  <!-- TEST 5 -->
+  <div class="card">
+    <div class="card-header">
+      <span class="card-title">Test 5: Student Login (Roll Number / Email)</span>
+      <span class="status-pill status-done">200 OK</span>
+    </div>
+    <div><span class="http-method method-post">POST</span> <code>http://127.0.0.1:5000/api/students/login</code></div>
+    <div style="margin-top: 6px; font-weight: 700; font-size: 8.5pt;">Request Body:</div>
+<pre>{
+  "studentId": "2410993999",
+  "password": "Password123!"
+}</pre>
+    <div style="font-weight: 700; font-size: 8.5pt;">Live Server Response (JWT Token & Role):</div>
+<pre>{
+  "success": true,
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+  "student": {
+    "name": "Aarti Test",
+    "studentId": "2410993999",
+    "role": "student"
+  }
+}</pre>
+  </div>
+
+  <h2>5. Cloud Deployment Guide (Render.com)</h2>
+  <p style="font-size: 9.5pt;">When your team is ready to deploy your backend to the cloud:</p>
+  <ol style="font-size: 9.5pt; line-height: 1.6; padding-left: 20px;">
+    <li>Log into <strong>Render.com</strong> with GitHub and select <strong>New Web Service</strong>.</li>
+    <li>Connect the repository <code>rt2407-08/The_Assignment_Plagiarism</code>.</li>
+    <li>Configure:
+      <ul style="margin: 4px 0;">
+        <li><strong>Root Directory:</strong> <code>backend</code></li>
+        <li><strong>Build Command:</strong> <code>npm install</code></li>
+        <li><strong>Start Command:</strong> <code>node server.js</code></li>
+      </ul>
+    </li>
+    <li>Add the environment variables:
+      <ul style="margin: 4px 0;">
+        <li><code>PORT</code>: <code>5000</code></li>
+        <li><code>MONGODB_URI</code>: <code>mongodb+srv://rt-2007:Shrutu2011@cluster0.g6nere2.mongodb.net/VeriText?retryWrites=true&w=majority</code></li>
+        <li><code>JWT_SECRET</code>: <code>veritext_super_secret_jwt_key_2026</code></li>
+      </ul>
+    </li>
+    <li>Click <strong>Deploy</strong>. Render will output your live URL (e.g. <code>https://veritext-api.onrender.com</code>).</li>
+    <li>In <code>frontend/src/services/api.js</code>, replace <code>http://127.0.0.1:5000</code> with your live Render URL.</li>
+  </ol>
+
+  <div style="text-align: center; margin-top: 30px; font-size: 9pt; color: #94a3b8; border-top: 1px solid #e2e8f0; padding-top: 10px;">
+    VeriText Continuous Evaluation 2 Report • Generated October 2026
+  </div>
+
+</body>
+</html>

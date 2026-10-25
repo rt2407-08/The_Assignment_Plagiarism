@@ -1,0 +1,222 @@
+{
+  "info": {
+    "_postman_id": "veritext-evaluation-2026",
+    "name": "VeriText - Assignment Plagiarism API Testing",
+    "description": "Continuous Evaluation API test collection for VeriText Plagiarism Platform. Tests MVC endpoints, MongoDB Atlas integration, server-side N-gram algorithm, Multer file upload, and JWT roles.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://127.0.0.1:5000/api",
+      "type": "string"
+    },
+    {
+      "key": "assignmentCode",
+      "value": "VT-6D8RZ6",
+      "type": "string"
+    },
+    {
+      "key": "assignmentId",
+      "value": "6ade15f0c083d01645fb3d17",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "1. Authentication (JWT Roles)",
+      "item": [
+        {
+          "name": "Instructor Login (Role: instructor)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"proftest@university.edu\",\n  \"password\": \"Password123!\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/instructors/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["instructors", "login"]
+            },
+            "description": "Verifies instructor credentials, returns signed JWT token with role 'instructor'."
+          }
+        },
+        {
+          "name": "Student Login (Role: student)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"studentId\": \"2410993999\",\n  \"password\": \"Password123!\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/students/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["students", "login"]
+            },
+            "description": "Verifies student credentials using Student Roll Number or Email, returns signed JWT token with role 'student'."
+          }
+        }
+      ]
+    },
+    {
+      "name": "2. Assignments",
+      "item": [
+        {
+          "name": "Get All Assignments",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/assignments",
+              "host": ["{{baseUrl}}"],
+              "path": ["assignments"]
+            },
+            "description": "Fetches all assignments stored in MongoDB Atlas."
+          }
+        },
+        {
+          "name": "Get Assignment by Code",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/assignments/code/{{assignmentCode}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["assignments", "code", "{{assignmentCode}}"]
+            },
+            "description": "Retrieves assignment details and question prompt schemas by assignmentCode."
+          }
+        }
+      ]
+    },
+    {
+      "name": "3. Submissions & Multer Upload",
+      "item": [
+        {
+          "name": "POST Submission (JSON Body)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"assignmentId\": \"{{assignmentId}}\",\n  \"studentName\": \"Rohan Verma\",\n  \"studentId\": \"2410993161\",\n  \"content\": \"Question 1 (Java):\\nQuestion: writee a code\\nAnswer:\\nyesss\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/submissions",
+              "host": ["{{baseUrl}}"],
+              "path": ["submissions"]
+            },
+            "description": "Creates a student submission with raw content in MongoDB Atlas."
+          }
+        },
+        {
+          "name": "POST Submission (Multer File Upload)",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "assignmentId",
+                  "value": "{{assignmentId}}",
+                  "type": "text"
+                },
+                {
+                  "key": "studentName",
+                  "value": "Priya Singh",
+                  "type": "text"
+                },
+                {
+                  "key": "studentId",
+                  "value": "2410993162",
+                  "type": "text"
+                },
+                {
+                  "key": "content",
+                  "value": "Question 1 (Java):\nQuestion: writee a code\nAnswer:\nSee uploaded file",
+                  "type": "text"
+                },
+                {
+                  "key": "file",
+                  "description": "Attach any .java, .py, or .txt file",
+                  "type": "file",
+                  "src": []
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/submissions",
+              "host": ["{{baseUrl}}"],
+              "path": ["submissions"]
+            },
+            "description": "Tests optional Multer file upload variant: reads file from memory buffer and stores fileName and content."
+          }
+        },
+        {
+          "name": "Get Submissions for Assignment",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/submissions/assignment/{{assignmentId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["submissions", "assignment", "{{assignmentId}}"]
+            },
+            "description": "Lists all student submissions submitted for a given assignment."
+          }
+        }
+      ]
+    },
+    {
+      "name": "4. Plagiarism & Similarity Reports (Server-Side N-Gram)",
+      "item": [
+        {
+          "name": "GET Server-Side N-Gram Similarity Report",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/assignments/{{assignmentCode}}/similarity-report",
+              "host": ["{{baseUrl}}"],
+              "path": ["assignments", "{{assignmentCode}}", "similarity-report"]
+            },
+            "description": "Runs the N-gram Jaccard similarity algorithm server-side across all submission pairs and returns flagged matches, overall similarity, and side-by-side details."
+          }
+        },
+        {
+          "name": "GET All Saved Reports from MongoDB",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/similarity-reports",
+              "host": ["{{baseUrl}}"],
+              "path": ["similarity-reports"]
+            },
+            "description": "Demonstrates persistence in the MongoDB SimilarityReport collection."
+          }
+        }
+      ]
+    }
+  ]
+}
