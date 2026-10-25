@@ -5,6 +5,7 @@ VeriText is a full-stack academic integrity and source code / text similarity re
 
 The platform includes instructor and student authentication, a protected assignment dashboard, code generation, submission processing supporting direct input and file attachments (`.java`, `.py`, `.cpp`, `.txt`), cross-submission pairwise matrix computation, persistent similarity reports, and an interactive review dashboard with a real-time similarity threshold slider. Application data is persisted in MongoDB Atlas and managed through a modular Express REST API.
 
+* **Live Web Application:** [rt2407-08.github.io/The_Assignment_Plagiarism](https://rt2407-08.github.io/The_Assignment_Plagiarism/)
 * **Backend service:** [veritext-backend-oe56.onrender.com](https://veritext-backend-oe56.onrender.com/)
 * **API Endpoints base:** [veritext-backend-oe56.onrender.com/api](https://veritext-backend-oe56.onrender.com/api)
 * **GitHub repository:** [rt2407-08/The_Assignment_Plagiarism](https://github.com/rt2407-08/The_Assignment_Plagiarism)
@@ -515,6 +516,7 @@ VeriText delivers full-stack academic integrity verification, automated submissi
 
 ## 🔗 Live Application Links
 
+* **Live Web Application:** [https://rt2407-08.github.io/The_Assignment_Plagiarism/](https://rt2407-08.github.io/The_Assignment_Plagiarism/)
 * **Live Backend Service:** [https://veritext-backend-oe56.onrender.com](https://veritext-backend-oe56.onrender.com/)
 * **API Endpoints Directory:** [https://veritext-backend-oe56.onrender.com/api](https://veritext-backend-oe56.onrender.com/api)
 * **Sample Live Similarity Report:** [https://veritext-backend-oe56.onrender.com/api/assignments/VT-6D8RZ6/similarity-report](https://veritext-backend-oe56.onrender.com/api/assignments/VT-6D8RZ6/similarity-report)
