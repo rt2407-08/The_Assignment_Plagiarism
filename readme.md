@@ -1,126 +1,165 @@
-# VeriText — Academic Integrity & Plagiarism Detection Platform
+# VeriText 🔍
+### Analyze submissions. Detect similarities. Ensure academic integrity.
 
-[![Node.js](https://img.shields.io/badge/Node.js-v18+-339933?logo=node.js&logoColor=white)](https://nodejs.org/)
-[![Express.js](https://img.shields.io/badge/Express.js-MVC%20Architecture-000000?logo=express&logoColor=white)](https://expressjs.com/)
-[![MongoDB Atlas](https://img.shields.io/badge/MongoDB%20Atlas-Cloud%20Database-47A248?logo=mongodb&logoColor=white)](https://www.mongodb.com/atlas)
-[![Render](https://img.shields.io/badge/Render-Deployed%20&%20Live-46E3B7?logo=render&logoColor=white)](https://veritext-backend-oe56.onrender.com)
-[![JWT](https://img.shields.io/badge/JWT-Role--Based%20Auth-000000?logo=jsonwebtokens&logoColor=white)](https://jwt.io/)
-[![Frontend](https://img.shields.io/badge/Frontend-React%20%2B%20Vite-61DAFB?logo=react&logoColor=black)](https://vitejs.dev/)
+VeriText is a full-stack academic integrity and source code / text similarity review web application designed to help instructors review student submissions and detect plagiarism across assignments. Instead of relying on brittle manual checks or basic keyword matching, VeriText processes text answers and uploaded code files through a server-side **N-gram tokenizer and Jaccard similarity coefficient engine**.
 
-VeriText is a full-stack academic integrity and source code / text similarity review platform built with **Node.js, Express, MongoDB Atlas, and React**. It enables educators to create multi-question text and code assignments, accepts student submissions via direct input or file uploads (`.java`, `.py`, `.cpp`, `.txt`), and computes cross-submission similarity using a server-side **N-gram tokenizer and Jaccard similarity coefficient engine**.
+The platform includes instructor and student authentication, a protected assignment dashboard, code generation, submission processing supporting direct input and file attachments (`.java`, `.py`, `.cpp`, `.txt`), cross-submission pairwise matrix computation, persistent similarity reports, and an interactive review dashboard with a real-time similarity threshold slider. Application data is persisted in MongoDB Atlas and managed through a modular Express REST API.
 
----
-
-## 🌐 Live Cloud Deployment
-
-* **Live Cloud Service URL:** [https://veritext-backend-oe56.onrender.com](https://veritext-backend-oe56.onrender.com)
-* **API Endpoints Directory:** [https://veritext-backend-oe56.onrender.com/api](https://veritext-backend-oe56.onrender.com/api)
-* **Cloud Database:** MongoDB Atlas Cluster (Operational)
+* **Backend service:** [veritext-backend-oe56.onrender.com](https://veritext-backend-oe56.onrender.com/)
+* **API Endpoints base:** [veritext-backend-oe56.onrender.com/api](https://veritext-backend-oe56.onrender.com/api)
+* **GitHub repository:** [rt2407-08/The_Assignment_Plagiarism](https://github.com/rt2407-08/The_Assignment_Plagiarism)
 
 ---
 
-## 🔬 Core Theory & Algorithms
+## Table of contents
+* [Project overview](#-project-overview)
+* [Features](#-features)
+* [How VeriText works](#-how-veritext-works)
+* [Technology stack](#-technology-stack)
+* [Architecture](#-architecture)
+* [Project structure](#-project-structure)
+* [Run the project locally](#-run-the-project-locally)
+* [Environment variables](#-environment-variables)
+* [API reference](#-api-reference)
+* [Similarity engine](#-similarity-engine)
+* [Database collections](#-database-collections)
+* [Testing with Postman](#-testing-with-postman)
+* [Deployment](#-deployment)
+* [Troubleshooting](#-troubleshooting)
+* [Security and data notes](#-security-and-data-notes)
+* [Project summary](#-project-summary)
 
-### 1. Plagiarism Detection Theory
-Plagiarism detection in educational environments must address both natural language text (essays, short answers) and programming source code. Traditional exact string matching (such as Levenshtein distance or substring search) fails when students reorder sentences, rename variables, alter indentation, or modify comments. VeriText solves this by using **N-gram Tokenization** combined with **Set-Based Similarity Metrics**.
+---
 
-#### A. N-Gram Tokenization
-An **$n$-gram** is a contiguous sequence of $n$ items from a given sample of text or code:
-- **Character $n$-grams (Sub-word Level):** Captures prefixes, suffixes, and typographical permutations. Used for source code where keywords and structural tokens dominate.
-- **Word $n$-grams (Word Level):** Captures local word ordering and phrase structure in descriptive text answers (e.g., trigrams with $n = 3$).
+## 🌟 Project overview
+
+Evaluating academic submissions manually becomes impractical as class sizes scale. VeriText solves this challenge through an automated, server-driven workflow:
+
+1. **Assignment creation:** The instructor creates an assignment with custom text and code questions, word/character constraints, target programming languages, and a baseline similarity threshold.
+2. **Student submissions:** Students authenticate using their university roll numbers and submit typed answers or upload program source code files.
+3. **Server-side pipeline:** Submissions are parsed in-memory using Multer buffer extraction and stored securely in MongoDB Atlas.
+4. **Algorithmic analysis:** The backend tokenizes all submissions into character and word $n$-grams, computes pairwise Jaccard similarity coefficients, and flags high-risk pairs.
+5. **Interactive reporting:** Instructors review detailed comparisons on a dedicated report page equipped with a live threshold slider, 4 summary stat cards, and side-by-side monospace answer comparisons.
+
+The frontend is built with HTML5, CSS3, modern JavaScript, and React (Vite). The backend uses Node.js, Express, and Mongoose, with MongoDB Atlas providing persistent cloud data storage.
+
+---
+
+## ✨ Features
+
+### Account and session management
+* **Role-based authentication:** Separate registration and login portals for instructors and students.
+* **Roll number & email support:** Students can log in using either their official roll number or university email address.
+* **Password security:** Passwords are encrypted with `bcryptjs` using 10 salt rounds prior to database persistence.
+* **Stateless JWT tokens:** Cryptographically signed JSON Web Tokens (`HS256`) carrying user identity and role scopes (`instructor`, `student`).
+* **Route protection:** Middleware guards ensure student endpoints and instructor administrative controls are strictly compartmentalized.
+
+### Assignment management
+* **Multi-question assignments:** Supports mixed assignments containing both descriptive text questions and programming tasks.
+* **Programming language support:** Question-level language selection for Python, Java, C, C++, and JavaScript.
+* **Automatic code generation:** Generates unique, human-readable assignment codes (e.g., `VT-6D8RZ6`) for student access.
+* **Submission constraints:** Configurable minimum/maximum word counts and assignment-level baseline similarity thresholds.
+* **Dashboard metrics:** Tracks active assignments, submission counts, and overall course integrity statistics.
+
+### Student submission portal
+* **Assignment code lookup:** Students fetch real-time assignment details and questions directly from the cloud backend.
+* **Multi-question response:** Input fields dynamically render according to question types (text area or syntax-highlighted code editor).
+* **Multer file attachment pipeline:** Accepts source code file uploads (`.java`, `.py`, `.cpp`, `.txt`) with in-memory buffer extraction.
+* **Submission receipt:** Immediate confirmation with unique submission IDs and server timestamps.
+
+### Similarity reports & analytics
+* **Overall submission-pair similarity:** Computes pairwise similarity scores across all student submissions for an assignment.
+* **Highest similarity alert card:** Instantly highlights the pair with the highest match percentage.
+* **Interactive similarity threshold slider:** Real-time slider (0% to 100%) dynamically re-filters displayed pairs without page reloads.
+* **Status indicators:** Automatic classification into `HIGH` (flagged), `REVIEW` (moderate), and `LOW` (safe) risk bands.
+* **Question-by-question breakdown:** Detailed question-level similarity percentages comparing specific answers.
+* **Side-by-side comparison toggle:** Monospace preformatted code diff blocks allowing instructors to inspect matching tokens side by side.
+
+---
+
+## 🔄 How VeriText works
+
+A typical user workflow:
+
+1. **Instructor registers or logs in:** The backend verifies credentials, signs a role-aware JWT token, and returns the instructor profile.
+2. **Create an assignment:** The instructor specifies title, questions (text or code), target programming language, and similarity threshold. The server assigns an assignment code (e.g. `VT-6D8RZ6`).
+3. **Students join and submit:** Students log in with their roll number, enter the assignment code, and submit their solutions (typed or uploaded files).
+4. **Backend ingestion:** Express and Multer process incoming requests, extract file buffers, and persist submission records into MongoDB Atlas.
+5. **Generate similarity report:** When the instructor accesses the report page, the backend retrieves all assignment submissions, runs the N-gram tokenization and Jaccard scoring engine, and builds a cross-submission pair matrix.
+6. **Review & adjust:** The instructor reviews flagged submissions, adjusts the similarity threshold slider to filter pairs, and expands side-by-side answer comparisons.
+
+---
+
+## 🧰 Technology stack
+
+| Layer | Technology | Role |
+| :--- | :--- | :--- |
+| **Frontend** | HTML5, CSS3, JavaScript (ES6+), React, Vite | Multi-page portals, dashboards, threshold slider, dynamic report views |
+| **API Server** | Node.js, Express.js | HTTP server, RESTful API routing, request validation |
+| **Architecture** | MVC Pattern | Strict separation of Models, Views, Controllers, Routes, and Middleware |
+| **Database** | MongoDB Atlas, Mongoose ODM | Cloud storage for users, assignments, submissions, and reports |
+| **Similarity Engine** | Custom Server-Side N-Gram Tokenizer | Character and word n-gram generation and Jaccard similarity computation |
+| **File Uploads** | Multer | Memory-storage buffer parsing for code/text attachments (`.java`, `.py`, etc.) |
+| **Authentication** | JSON Web Tokens (JWT), Bcrypt.js | Stateless role-based authorization and salted password hashing |
+| **API Testing** | Postman / Thunder Client | Automated endpoint verification, response validation, and test suites |
+| **Hosting** | Render.com | Cloud web service hosting with automatic branch deployments |
+
+---
+
+## 🏗️ Architecture
+
+VeriText follows a strict **Model-View-Controller (MVC)** architectural pattern to ensure clean separation of concerns, scalability, and code maintainability:
 
 ```text
-Original String:   "public class Solution"
-Word 2-grams:     {"public class", "class Solution"}
-Char 3-grams:     {"pub", "ubl", "bli", "lic", "ic ", "c c", " cl", "cla", ...}
+ ┌────────────────┐
+ │    Frontend    │ <────── HTTP Requests / JSON Responses ──────> Express Server
+ │ (React / Views)│
+ └───────┬────────┘
+         │
+         ▼
+ ┌────────────────┐
+ │     Routes     │ ──────> URL Dispatching (/api/assignments, /api/submissions, etc.)
+ └───────┬────────┘
+         │
+         ▼
+ ┌────────────────┐
+ │   Middleware   │ ──────> JWT Authentication Guard & Multer Memory Storage Pipeline
+ └───────┬────────┘
+         │
+         ▼
+ ┌────────────────┐         ┌─────────────────────────┐
+ │  Controllers   │ <─────> │   Algorithmic Engines   │ (ngramSimilarity.js)
+ └───────┬────────┘         └─────────────────────────┘
+         │
+         ▼
+ ┌────────────────┐
+ │     Models     │ <─────> MongoDB Atlas (Mongoose ODM)
+ └────────────────┘
 ```
 
-#### B. Preprocessing & Normalization
-Before tokenization, all submissions undergo a normalization pipeline:
-1. **Case Folding:** Converts characters to lowercase to eliminate case sensitivity.
-2. **Comment Stripping:** Strips line comments (`//`, `#`) and block comments (`/* ... */`).
-3. **Whitespace Canonicalization:** Compresses tabs, multiple spaces, and newlines into single spaces.
-4. **Punctuation Normalization:** Removes non-alphanumeric noise while preserving programming syntax operators.
-
-#### C. Jaccard Similarity Coefficient
-To compute similarity between Student $A$ ($S_A$) and Student $B$ ($S_B$), their normalized contents are converted into sets of unique $n$-grams, denoted as $G_A$ and $G_B$.
-
-The **Jaccard Similarity Index** $J(G_A, G_B)$ is defined as the size of the intersection divided by the size of the union of the sample sets:
-
-$$J(G_A, G_B) = \frac{|G_A \cap G_B|}{|G_A \cup G_B|} = \frac{|G_A \cap G_B|}{|G_A| + |G_B| - |G_A \cap G_B|}$$
-
-* **Score Range:** $0.0 \le J(G_A, G_B) \le 1.0$ (multiplied by $100$ for percentage: $0\%$ to $100\%$).
-* **Intersection ($|G_A \cap G_B|$):** The count of distinct $n$-grams that appear in both submissions.
-* **Union ($|G_A \cup G_B|$):** The total count of all unique $n$-grams across both submissions.
-
-#### D. Pairwise Cross-Submission Matrix
-For an assignment with $M$ student submissions, the system computes $\frac{M(M - 1)}{2}$ unique pairwise comparisons across all questions:
-
-$$\text{Total Comparisons} = \binom{M}{2} = \frac{M(M - 1)}{2}$$
-
-Each pair is evaluated per question and aggregated into an overall score. If the computed similarity meets or exceeds the instructor's configured threshold ($\tau$), the pair is flagged for review.
+### MVC Responsibilities:
+* **Model:** Defines Mongoose database schemas, validation rules, and indexes (`Assignment`, `Submission`, `Student`, `Instructor`, `SimilarityReport`).
+* **View:** The user interface presentation layer located in `frontend/`, providing interactive dashboards, real-time threshold filtering, and comparison tables.
+* **Controller:** Contains core business logic, input sanitization, database queries, and response formatting (`backend/controllers/`).
+* **Route:** Maps HTTP methods and URL paths to specific controller handlers (`backend/routes/`).
+* **Middleware:** Performs cross-cutting tasks such as role-based JWT validation (`authMiddleware.js`) and in-memory file uploads (`uploadMiddleware.js`).
+* **Utils / Engines:** Standalone algorithmic logic (`ngramSimilarity.js`) handles tokenization, normalization, and Jaccard mathematics independently of HTTP controllers.
 
 ---
 
-### 2. Software Architecture Theory (MVC Pattern)
-The backend is structured according to the **Model-View-Controller (MVC)** architectural pattern:
-
-```text
- ┌───────────────┐
- │   Frontend    │ <────── HTTP Requests / JSON Responses ──────> Express Server
- │(React / Views)│
- └───────┬───────┘
-         │
-         ▼
- ┌───────────────┐
- │    Routes     │ ──────> Dispatches request endpoints (/api/...)
- └───────┬───────┘
-         │
-         ▼
- ┌───────────────┐
- │  Middleware   │ ──────> Auth Verification (JWT) / Upload Handling (Multer)
- └───────┬───────┘
-         │
-         ▼
- ┌───────────────┐         ┌────────────────────────┐
- │  Controllers  │ <─────> │  Algorithms & Utils    │ (N-gram Engine)
- └───────┬───────┘         └────────────────────────┘
-         │
-         ▼
- ┌───────────────┐
- │    Models     │ <─────> MongoDB Atlas (Mongoose ODM)
- └───────────────┘
-```
-
-* **Models (`backend/models/`):** Encapsulate the data structure, schema constraints, validation rules, and direct interaction with MongoDB Atlas.
-* **Views (`frontend/`):** Present the UI to the user (React dashboards, report tables, threshold sliders). Views never access the database directly; all data is fetched via REST APIs.
-* **Controllers (`backend/controllers/`):** Contain the business logic, request handling, input sanitization, error dispatching, and response formatting.
-* **Routes (`backend/routes/`):** Route incoming HTTP requests to their respective controller methods based on path and method.
-* **Middleware (`backend/middleware/`):** Intercepts requests for cross-cutting concerns (JWT authentication token verification, Multer multipart form-data parsing).
-
----
-
-### 3. Security & Authentication Theory
-* **Stateless JWT Authentication:** Users authenticate once with credentials and receive a digitally signed JSON Web Token (JWT) using HMAC-SHA256 (`HS256`). Subsequent requests authenticate using the standard HTTP `Authorization: Bearer <token>` header without server session state.
-* **Role-Based Access Control (RBAC):** Tokens carry a signed `role` payload (`instructor` or `student`). Middleware validates role claims before granting access to instructor-only capabilities (assignment creation, similarity report viewing).
-* **Bcrypt Password Hashing:** User passwords are never stored in plaintext. They are hashed using `bcryptjs` with auto-generated salts (10 rounds) to protect against rainbow table and collision attacks.
-
----
-
-## 🏗️ Monorepo Project Structure
+## 🗂️ Project structure
 
 ```text
 The_Assignment_Plagiarism/
-│
 ├── backend/                                # Node.js / Express MVC Server
-│   ├── config/                             # Database & server configuration
-│   ├── controllers/                        # Business logic & request handlers
+│   ├── config/                             # Server & database configuration
+│   ├── controllers/                        # Business logic & request orchestration
 │   │   ├── assignmentController.js         # Assignment CRUD & code generation
 │   │   ├── instructorController.js         # Instructor signup & JWT login
 │   │   ├── studentController.js            # Student signup & roll-number login
 │   │   ├── submissionController.js         # Text & Multer file submissions
 │   │   └── similarityReportController.js   # Pairwise n-gram report calculation
-│   ├── middleware/                         # Express middleware stack
+│   ├── middleware/                         # Request interceptors
 │   │   ├── authMiddleware.js               # JWT role validation (instructor/student)
 │   │   └── uploadMiddleware.js             # Multer in-memory storage for file uploads
 │   ├── models/                             # Mongoose database schemas
@@ -170,134 +209,316 @@ The_Assignment_Plagiarism/
 
 ---
 
-## 🔄 End-to-End Application Workflow
+## 🚀 Run the project locally
 
-```text
-[Instructor Sign-Up / Login]
-       │
-       ▼
-[Create Assignment] ────> Generates Unique Assignment Code (e.g. VT-6D8RZ6)
-                                 │
-                                 ▼
-                     [Student Joins via Code]
-                                 │
-                                 ▼
-                   [Submit Solution / File Upload]
-                                 │
-                                 ▼
-                   [Multer Parses Code Buffer]
-                                 │
-                                 ▼
-                   [Stored in MongoDB Atlas]
-                                 │
-                                 ▼
-             [Instructor Opens Similarity Report]
-                                 │
-                                 ▼
-           [Server-Side N-Gram & Jaccard Execution]
-                                 │
-                                 ▼
-          [Interactive Report with Threshold Slider]
-```
+### Prerequisites
+* **Node.js** (v18.x or later installed)
+* **npm** (v9.x or later installed)
+* **MongoDB Atlas** database connection string (or local MongoDB on port 27017)
+* **Git** installed on your system
 
-### Step 1: Assignment Creation
-1. Instructor authenticates via `/api/instructors/login` and receives a JWT token.
-2. Instructor creates an assignment specifying title, description, questions (text or code), target programming language, and a baseline similarity threshold $\tau$ (default: $30\%$).
-3. The server generates a unique alphanumeric assignment code (e.g., `VT-6D8RZ6`) and saves the record in MongoDB.
-
-### Step 2: Student Submission
-1. Student authenticates via `/api/students/login` with their university roll number and password.
-2. Student enters the assignment code to load questions dynamically from the backend.
-3. Student enters typed answers or uploads source code files (`.java`, `.py`, `.cpp`, `.txt`).
-4. `uploadMiddleware.js` parses the file buffer in memory and attaches it to the database record.
-
-### Step 3: Similarity Report Computation
-1. Instructor visits the report page for the assignment.
-2. The server gathers all submissions associated with the assignment ID.
-3. For each pair $(S_i, S_j)$, the N-gram similarity engine tokenizes the submissions, computes the Jaccard coefficient for each question, and generates an aggregate similarity percentage.
-4. If the aggregate similarity exceeds the threshold, the pair is flagged with a `HIGH` status badge.
-5. The report returns total submissions, total comparisons, average similarity, highest similarity pair, and question-level breakdowns.
-
-### Step 4: Interactive Review & Filtering
-1. The frontend renders 4 summary stat cards and a highest match callout.
-2. The instructor can use the **Similarity Threshold Slider** (0% to 100%) to re-filter displayed pairs on the fly without reloading the page.
-3. Clicking **"Compare Answers"** expands a side-by-side monospace preformatted comparison box to inspect identical text or code blocks.
-
----
-
-## 📡 REST API Reference
-
-| Endpoint | Method | Auth | Description |
-| :--- | :---: | :---: | :--- |
-| `/` or `/api` | `GET` | Public | Live cloud health check and endpoints directory |
-| `/api/instructors/signup` | `POST` | Public | Register new instructor account |
-| `/api/instructors/login` | `POST` | Public | Authenticate instructor and return JWT token |
-| `/api/students/signup` | `POST` | Public | Register student (requires unique student ID and email) |
-| `/api/students/login` | `POST` | Public | Authenticate student via roll number or email |
-| `/api/assignments` | `GET` | Public | List all assignments with question counts |
-| `/api/assignments` | `POST` | Instructor | Create new assignment with questions and threshold |
-| `/api/assignments/code/:code` | `GET` | Public | Fetch assignment details by unique code (e.g. `VT-6D8RZ6`) |
-| `/api/submissions` | `POST` | Student | Submit assignment answers (supports JSON or multipart file upload) |
-| `/api/assignments/:id/similarity-report` | `GET` | Instructor | Compute and retrieve live server-side N-gram similarity report |
-
----
-
-## 💻 Step-by-Step Setup & How to Run
-
-### 1. Prerequisites
-- **Node.js** (v18.x or later)
-- **npm** (v9.x or later)
-- **MongoDB Atlas** account (or a running local MongoDB instance)
-
-### 2. Clone the Repository
+### 1. Clone the repository
 ```bash
 git clone https://github.com/rt2407-08/The_Assignment_Plagiarism.git
 cd The_Assignment_Plagiarism
 ```
 
-### 3. Backend Setup
+### 2. Install backend dependencies
 ```bash
 cd backend
 npm install
-cp .env.example .env
 ```
-Open `.env` and fill in your configuration:
+
+### 3. Create the environment file
+Create a file named `.env` inside the `backend/` directory:
 ```env
 PORT=5000
-MONGODB_URI=your_mongodb_connection_string
-JWT_SECRET=your_jwt_secret_key
+MONGODB_URI=mongodb+srv://<username>:<password>@cluster0.g6nere2.mongodb.net/VeriText?retryWrites=true&w=majority
+JWT_SECRET=your_super_secret_jwt_key_2026
 ```
-Start the backend server:
+*(Replace placeholders with your real MongoDB Atlas credentials. Never commit `.env` to GitHub).*
+
+### 4. Start the backend server
+For development with automatic reload:
+```bash
+npm run dev
+```
+Or run standard production start:
 ```bash
 npm start
-# Server runs on http://localhost:5000
 ```
+The backend binds to `0.0.0.0` and listens on port `5000` by default:
+* Local server: `http://localhost:5000`
+* Local API base: `http://localhost:5000/api`
 
-### 4. Frontend Setup
+### 5. Start the frontend
+Open a separate terminal:
 ```bash
-cd ../frontend
+cd frontend
 npm install
 npm run dev
-# Vite dev server runs on http://localhost:5173
 ```
+Open `http://localhost:5173` in your browser. All API requests from the frontend communicate with the backend.
 
-### 5. Running from Root
-From the root of the project, you can start both components using workspace scripts:
+### 6. Confirm local connectivity
+Verify that the server and database are functioning by sending a GET request:
 ```bash
-npm run server    # Runs the Node.js backend
-npm run client    # Runs the Vite frontend development server
+curl http://localhost:5000/api
+```
+Response:
+```json
+{
+  "success": true,
+  "message": "VeriText backend API is live and operational!",
+  "database": "connected"
+}
 ```
 
 ---
 
-## 🌿 Git Branching & Feature Workflow
+## 🔐 Environment variables
 
-The project strictly follows a feature-branch team workflow:
+| Variable | Required | Purpose |
+| :--- | :---: | :--- |
+| `MONGODB_URI` | **Yes** | MongoDB Atlas cloud connection string |
+| `JWT_SECRET` | **Yes** | Secret cryptographic key used to sign and verify JSON Web Tokens |
+| `PORT` | Local default | Server port; defaults to `5000` when not provided |
 
-* **`feature/mvc-architecture`** (Ishita Dahiya): Frontend restructuring, database models, and authentication controllers.
-* **`feature/similarity-algorithm`** (Krrish Makkar): N-gram tokenizer, Multer middleware, and pairwise comparison matrix.
-* **`feature/cloud-deployment-frontend`** (Aarti Thakur): Express production server, Render cloud deployment, live API wiring, and interactive threshold slider.
-* **`main`**: Production-ready branch containing merged feature branches with explicit merge commits.
+### Production Environment Notes
+Configure `MONGODB_URI`, `JWT_SECRET`, and `PORT` in the Render Web Service Environment settings. Render dynamically provides `PORT` (or defaults to `5000`). Never paste secrets into public commits, screenshots, or README examples.
+
+---
+
+## 🔌 API reference
+
+All API responses are formatted in JSON. Authentication endpoints issue signed JWT tokens. Protected instructor and student endpoints require the standard `Authorization: Bearer <token>` header.
+
+* **Production API Base:** `https://veritext-backend-oe56.onrender.com/api`
+* **Local API Base:** `http://localhost:5000/api`
+
+### Health & Discovery
+| Method | Endpoint | Description | Access |
+| :---: | :--- | :--- | :---: |
+| `GET` | `/` | Root health check & database state | Public |
+| `GET` | `/api` | Operational endpoints directory & database connection | Public |
+| `GET` | `/api/health` | Service uptime and MongoDB connectivity | Public |
+
+### Authentication
+| Method | Endpoint | Description | Access |
+| :---: | :--- | :--- | :---: |
+| `POST` | `/api/instructors/signup` | Register new instructor account | Public |
+| `POST` | `/api/instructors/login` | Authenticate instructor & return JWT token | Public |
+| `POST` | `/api/students/signup` | Register student (requires unique student ID & email) | Public |
+| `POST` | `/api/students/login` | Authenticate student via roll number or email | Public |
+
+Example Instructor Login Request:
+```json
+POST /api/instructors/login
+Content-Type: application/json
+
+{
+  "email": "proftest@university.edu",
+  "password": "Password123!"
+}
+```
+
+Example Instructor Login Response:
+```json
+{
+  "success": true,
+  "message": "Login successful.",
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+  "instructor": {
+    "id": "6ade311284d7da25b8f5832c",
+    "name": "Prof Test",
+    "email": "proftest@university.edu",
+    "role": "instructor"
+  }
+}
+```
+
+### Assignments
+| Method | Endpoint | Description | Access |
+| :---: | :--- | :--- | :---: |
+| `GET` | `/api/assignments` | List assignments (supports `?instructorId=` query) | Public |
+| `POST` | `/api/assignments` | Create assignment with questions and threshold | Instructor |
+| `GET` | `/api/assignments/:id` | Fetch assignment by MongoDB Object ID | Public |
+| `GET` | `/api/assignments/code/:code` | Fetch assignment by alphanumeric code (e.g. `VT-6D8RZ6`) | Public |
+| `DELETE` | `/api/assignments/:id` | Delete assignment record | Instructor |
+
+### Submissions
+| Method | Endpoint | Description | Access |
+| :---: | :--- | :--- | :---: |
+| `GET` | `/api/submissions` | Retrieve submissions (supports `?assignmentId=`) | Public |
+| `POST` | `/api/submissions` | Submit answers (JSON body or multipart file upload) | Student |
+| `GET` | `/api/submissions/:id` | Retrieve single submission details | Public |
+
+Example JSON Submission Request:
+```json
+POST /api/submissions
+Content-Type: application/json
+
+{
+  "assignmentId": "6ade15f0c083d01645fb3d17",
+  "studentName": "Rohan Verma",
+  "studentId": "2410993161",
+  "content": "Question 1 (Java):\nQuestion: write a code\nAnswer:\npublic class Solution { ... }"
+}
+```
+
+### Similarity Reports
+| Method | Endpoint | Description | Access |
+| :---: | :--- | :--- | :---: |
+| `GET` | `/api/assignments/:id/similarity-report` | Compute/retrieve server-side N-gram similarity report | Instructor |
+| `GET` | `/api/similarity-reports` | List all persisted similarity reports | Instructor |
+
+Example Similarity Report Response:
+```json
+{
+  "success": true,
+  "report": {
+    "assignmentCode": "VT-6D8RZ6",
+    "assignmentTitle": "Mid sem",
+    "totalSubmissions": 5,
+    "totalComparisons": 10,
+    "flaggedCount": 6,
+    "averageSimilarity": 60,
+    "highestSimilarity": 100,
+    "flaggedPairs": [
+      {
+        "studentA": "Rohan Verma",
+        "studentIdA": "2410993161",
+        "studentB": "Aarti Thakur",
+        "studentIdB": "2410993160",
+        "similarity": 100,
+        "status": "HIGH",
+        "questionDetails": [
+          {
+            "questionIndex": 1,
+            "similarity": 100
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+
+---
+
+## 🧠 Similarity engine
+
+The plagiarism detection engine runs server-side in `backend/utils/ngramSimilarity.js`. It executes a four-stage analysis:
+
+### 1. Preprocessing & Normalization
+* **Text Answers:** Normalizes letter cases, strips leading/trailing punctuation, and condenses multiple whitespace characters into single spaces.
+* **Code Submissions:** Strips single-line (`//`, `#`) and multi-line (`/* ... */`) comments, normalizes bracket formatting, and ignores variable indentation differences.
+
+### 2. N-Gram Generation
+The normalized string is sliced into overlapping sequences of $N$ tokens:
+* Word $n$-grams (default: $N = 3$) for descriptive English answers.
+* Character $n$-grams (default: $N = 4$ or $5$) for programming source code to capture structural syntactic flow.
+
+### 3. Jaccard Similarity Calculation
+For two submission token sets $A$ and $B$, the engine computes the Jaccard similarity index:
+
+$$J(A, B) = \frac{|A \cap B|}{|A \cup B|} = \frac{|A \cap B|}{|A| + |B| - |A \cap B|}$$
+
+* **Score:** Range $0\%$ to $100\%$.
+* **Intersection ($|A \cap B|$):** Count of common identical $n$-grams.
+* **Union ($|A \cup B|$):** Total count of unique $n$-grams across both submissions.
+
+### 4. Pairwise Comparison Matrix
+For $M$ submissions, the engine evaluates all $\frac{M(M-1)}{2}$ unique unordered pairs across all assignment questions. If a pair's aggregated score is greater than or equal to the assignment's threshold ($\tau$), the pair is marked `HIGH` and added to `flaggedPairs`.
+
+---
+
+## 💾 Database collections
+
+| Collection | Purpose | Key Attributes |
+| :--- | :--- | :--- |
+| `instructors` | Faculty accounts & authentication | `name`, `email`, `password` (bcrypt), `department`, `role: "instructor"` |
+| `students` | Student accounts & enrollment | `name`, `studentId` (roll number), `email`, `password` (bcrypt), `role: "student"` |
+| `assignments` | Assignment definitions & constraints | `title`, `assignmentCode`, `questions` (array), `similarityThreshold`, `instructorId` |
+| `submissions` | Student submissions & attachments | `assignmentId`, `studentName`, `studentId`, `content`, `fileName`, `submittedAt` |
+| `similarityreports` | Persisted cross-submission analysis | `assignmentId`, `assignmentCode`, `totalSubmissions`, `flaggedCount`, `pairs` |
+
+---
+
+## 🧪 Testing with Postman
+
+A pre-built Postman collection is configured to test the full API lifecycle:
+
+1. **Health Check:** `GET /` and `GET /api` — verify database connection returns `"database": "connected"`.
+2. **Instructor Auth:** `POST /api/instructors/login` — authenticate and copy the returned JWT token.
+3. **Create Assignment:** `POST /api/assignments` — add `Authorization: Bearer <token>` and create an assignment. Note the returned `assignmentCode` (e.g. `VT-6D8RZ6`).
+4. **Student Auth:** `POST /api/students/login` — log in with roll number `2410993999`.
+5. **Submit Answers:** `POST /api/submissions` — submit JSON answers or upload a `.java` file using multipart form-data.
+6. **Generate Report:** `GET /api/assignments/:id/similarity-report` — view computed similarity scores, average percentages, and flagged pairs.
+
+### Postman Notes:
+* Set collection variable `baseUrl` to `https://veritext-backend-oe56.onrender.com/api` for cloud testing, or `http://localhost:5000/api` for local testing.
+* When testing file uploads in Postman, select **Body** → **form-data**, set the key to `file`, and choose **File** type to attach your `.java` or `.py` source file.
+
+---
+
+## ☁️ Deployment
+
+### Current Live Services
+| Component | Hosting Provider | URL | Status |
+| :--- | :--- | :--- | :---: |
+| **Backend API** | Render.com | [https://veritext-backend-oe56.onrender.com](https://veritext-backend-oe56.onrender.com) | ✅ Live |
+| **Database** | MongoDB Atlas | Cloud Cluster (`0.0.0.0/0` Whitelist) | ✅ Connected |
+| **Source Code** | GitHub | [rt2407-08/The_Assignment_Plagiarism](https://github.com/rt2407-08/The_Assignment_Plagiarism) | ✅ Active |
+
+### Deploying on Render.com
+1. Connect your GitHub repository to Render as a **Web Service**.
+2. Configure build and start parameters:
+   * **Root Directory:** `backend`
+   * **Build Command:** `npm install`
+   * **Start Command:** `node server.js`
+3. Add environment variables in the Render dashboard:
+   * `PORT`: `5000`
+   * `MONGODB_URI`: `mongodb+srv://<user>:<password>@cluster0.g6nere2.mongodb.net/VeriText?retryWrites=true&w=majority`
+   * `JWT_SECRET`: `your_super_secret_jwt_key_2026`
+4. In MongoDB Atlas **Network Access**, ensure `0.0.0.0/0` (Allow Access from Anywhere) is active so Render's dynamic cloud IP addresses can connect.
+
+---
+
+## 🛠️ Troubleshooting
+
+| Symptom | Cause | Solution |
+| :--- | :--- | :--- |
+| **502 Bad Gateway** | Render free tier service is spinning up after inactivity | Wait 30–50 seconds for container spin-up and refresh. Free-tier containers enter sleep mode after 15 minutes of idle time. |
+| **401 Unauthorized** | Missing or expired JWT token | Log in via `/api/instructors/login` or `/api/students/login` and include `Authorization: Bearer <token>` in the header. |
+| **Cannot GET /api** | Outdated server route | Ensure `app.get(["/", "/api"], ...)` is deployed in `server.js`. |
+| **MongoDB connection error** | Atlas IP whitelist or invalid URI | Verify that `0.0.0.0/0` is whitelisted in MongoDB Atlas Network Access and confirm database credentials in `MONGODB_URI`. |
+| **CORS Network Error** | Missing origin headers | `server.js` includes `app.use(cors())` to permit cross-origin requests from frontend origins. |
+| **Local Port 5000 in use** | An existing Node process is running | Run `lsof -i :5000` and `kill -9 <PID>` to free up the port, or change `PORT` in `.env`. |
+
+---
+
+## 🔒 Security and data notes
+
+* **Keep `.env` out of Git:** Production secrets (`MONGODB_URI`, `JWT_SECRET`) must never be committed to public repositories. Verified `.gitignore` rules protect `.env` files.
+* **Password Hashing:** Passwords are never stored in plaintext. `bcryptjs` is applied server-side with 10 salt rounds before database persistence.
+* **Stateless Authorization:** Secure JWT signatures prevent client-side credential spoofing. Token expiration ensures stale sessions expire automatically.
+* **Memory File Buffering:** Multer processes uploaded source code in memory buffers rather than saving unverified executable files to server disks.
+
+---
+
+## 📌 Project summary
+
+VeriText delivers full-stack academic integrity verification, automated submission ingestion, multi-language code similarity detection, and interactive reporting in one cohesive platform. Its MVC architecture cleanly decouples client views from backend routing and algorithmic computation, creating an extensible foundation for academic integrity management.
+
+---
+
+## 🔗 Live Application Links
+
+* **Live Backend Service:** [https://veritext-backend-oe56.onrender.com](https://veritext-backend-oe56.onrender.com/)
+* **API Endpoints Directory:** [https://veritext-backend-oe56.onrender.com/api](https://veritext-backend-oe56.onrender.com/api)
+* **Sample Live Similarity Report:** [https://veritext-backend-oe56.onrender.com/api/assignments/VT-6D8RZ6/similarity-report](https://veritext-backend-oe56.onrender.com/api/assignments/VT-6D8RZ6/similarity-report)
+* **GitHub Repository:** [https://github.com/rt2407-08/The_Assignment_Plagiarism](https://github.com/rt2407-08/The_Assignment_Plagiarism)
 
 ---
 
@@ -309,14 +530,5 @@ The project strictly follows a feature-branch team workflow:
 
 ---
 
-## 🔗 Live Application Links
-
-* **Production Backend Service:** [https://veritext-backend-oe56.onrender.com](https://veritext-backend-oe56.onrender.com)
-* **API Endpoints Directory & Health:** [https://veritext-backend-oe56.onrender.com/api](https://veritext-backend-oe56.onrender.com/api)
-* **Sample Live Similarity Report:** [https://veritext-backend-oe56.onrender.com/api/assignments/VT-6D8RZ6/similarity-report](https://veritext-backend-oe56.onrender.com/api/assignments/VT-6D8RZ6/similarity-report)
-* **Assignments API Endpoint:** [https://veritext-backend-oe56.onrender.com/api/assignments](https://veritext-backend-oe56.onrender.com/api/assignments)
-
----
-
 ## 📄 License & Academic Integrity
-This project is developed for educational and academic evaluation purposes. Built with ❤️ by Aarti Thakur, Ishita Dahiya, and Krrish Makkar.
+This project is developed for educational and continuous academic evaluation purposes. Built with ❤️ by Aarti Thakur, Ishita Dahiya, and Krrish Makkar.
