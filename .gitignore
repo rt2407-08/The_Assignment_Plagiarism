@@ -23,3 +23,20 @@ VeriText_Evaluation_Report.html
 
 # Operating system files
 .DS_Store
+
+# Local documents & personal files
+resume.*
+Aarti_Thakur_Resume*
+*.png
+*.pdf
+*.docx
+docs/
+
+# Frontend local build & Vite source
+frontend/src/
+frontend/public/
+frontend/dist/
+frontend/vite.config.js
+frontend/.oxlintrc.json
+frontend/package.json
+frontend/package-lock.json

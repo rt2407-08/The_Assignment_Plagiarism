@@ -1224,7 +1224,7 @@ submissionForm.addEventListener("submit", async function (event) {
         localStorage.removeItem("veritext_current_student");
 
         alert("Assignment submitted successfully! You have been logged out.");
-        window.location.href = "index.html";
+        window.location.href = "../index.html";
 
     } catch (error) {
         console.error("Submission error:", error);
