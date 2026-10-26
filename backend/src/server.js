@@ -18,12 +18,14 @@ const submissionRoutes = require("./routes/submissionRoutes");
 const similarityReportRoutes = require("./routes/similarityReportRoutes");
 const studentRoutes = require("./routes/studentRoutes");
 const instructorRoutes = require("./routes/instructorRoutes");
+const authRoutes = require("./routes/authRoutes");
 
 app.use("/api/assignments", assignmentRoutes);
 app.use("/api/submissions", submissionRoutes);
 app.use("/api/similarity-reports", similarityReportRoutes);
 app.use("/api/students", studentRoutes);
 app.use("/api/instructors", instructorRoutes);
+app.use("/api/auth", authRoutes);
 
 // Root & Health check routes for Render
 app.get(["/", "/api"], (req, res) => {
@@ -32,6 +34,7 @@ app.get(["/", "/api"], (req, res) => {
     message: "VeriText backend API is live and operational!",
     endpoints: {
       health: "/api/health",
+      auth: "/api/auth",
       assignments: "/api/assignments",
       submissions: "/api/submissions",
       similarityReports: "/api/similarity-reports",
