@@ -2,6 +2,12 @@
 // VERITEXT REPORT PAGE
 // =====================================
 
+const API_BASE_URL =
+    (typeof window !== "undefined" && window.localStorage && localStorage.getItem("veritext_api_url")) ||
+    (typeof window !== "undefined" && (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1" || window.location.protocol === "file:")
+        ? "http://127.0.0.1:5000/api"
+        : "https://veritext-backend-oe56.onrender.com/api");
+
 
 // =====================================
 // GET CURRENT INSTRUCTOR
@@ -389,7 +395,7 @@ async function loadReport() {
             if (currentInstructor.email) {
                 instParams.append("instructorEmail", currentInstructor.email.trim().toLowerCase());
             }
-            const asgRes = await fetch(`https://veritext-backend-oe56.onrender.com/api/assignments?${instParams.toString()}`);
+            const asgRes = await fetch(`${API_BASE_URL}/assignments?${instParams.toString()}`);
             const asgData = await asgRes.json();
             const assignments = asgData.assignments || (Array.isArray(asgData) ? asgData : []);
             if (assignments.length > 0) {
@@ -401,7 +407,7 @@ async function loadReport() {
 
         // Fetch assignment from MongoDB
         const assignmentResponse = await fetch(
-            `https://veritext-backend-oe56.onrender.com/api/assignments/code/${encodeURIComponent(assignmentCode)}`
+            `${API_BASE_URL}/assignments/code/${encodeURIComponent(assignmentCode)}`
         );
 
         const assignmentData = await assignmentResponse.json();
@@ -455,7 +461,7 @@ async function loadReport() {
 
         // Fetch submissions from MongoDB
         const submissionsResponse = await fetch(
-            "https://veritext-backend-oe56.onrender.com/api/submissions"
+            `${API_BASE_URL}/submissions`
         );
 
         const submissionsData = await submissionsResponse.json();

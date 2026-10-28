@@ -477,7 +477,7 @@ A pre-built Postman collection is configured to test the full API lifecycle:
 2. Configure build and start parameters:
    * **Root Directory:** `backend`
    * **Build Command:** `npm install`
-   * **Start Command:** `node server.js`
+   * **Start Command:** `npm start` (or `node src/server.js`)
 3. Add environment variables in the Render dashboard:
    * `PORT`: `5000`
    * `MONGODB_URI`: `mongodb+srv://<user>:<password>@cluster0.g6nere2.mongodb.net/VeriText?retryWrites=true&w=majority`

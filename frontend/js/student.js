@@ -2,6 +2,12 @@
 // VERITEXT STUDENT SUBMISSION
 // =====================================
 
+const API_BASE_URL =
+    (typeof window !== "undefined" && window.localStorage && localStorage.getItem("veritext_api_url")) ||
+    (typeof window !== "undefined" && (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1" || window.location.protocol === "file:")
+        ? "http://127.0.0.1:5000/api"
+        : "https://veritext-backend-oe56.onrender.com/api");
+
 
 // =====================================
 // STUDENT AUTHENTICATION
@@ -185,7 +191,7 @@ if (studentLogout) {
 async function findAssignment(code) {
     try {
         const response = await fetch(
-            `https://veritext-backend-oe56.onrender.com/api/assignments/code/${encodeURIComponent(code.trim())}`
+            `${API_BASE_URL}/assignments/code/${encodeURIComponent(code.trim())}`
         );
 
         const data = await response.json();
@@ -1190,7 +1196,7 @@ submissionForm.addEventListener("submit", async function (event) {
             const headers = {};
             if (studentToken) headers["Authorization"] = `Bearer ${studentToken}`;
 
-            response = await fetch("https://veritext-backend-oe56.onrender.com/api/submissions", {
+            response = await fetch(`${API_BASE_URL}/submissions`, {
                 method: "POST",
                 headers: headers,
                 body: formData
@@ -1199,7 +1205,7 @@ submissionForm.addEventListener("submit", async function (event) {
             const headers = { "Content-Type": "application/json" };
             if (studentToken) headers["Authorization"] = `Bearer ${studentToken}`;
 
-            response = await fetch("https://veritext-backend-oe56.onrender.com/api/submissions", {
+            response = await fetch(`${API_BASE_URL}/submissions`, {
                 method: "POST",
                 headers: headers,
                 body: JSON.stringify({

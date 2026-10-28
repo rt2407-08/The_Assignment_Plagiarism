@@ -1,0 +1,10 @@
+{
+  "name": "veritext",
+  "version": "1.0.0",
+  "description": "VeriText - Academic integrity and similarity review platform",
+  "scripts": {
+    "start": "node backend/src/server.js",
+    "server": "cd backend && npm run dev",
+    "server:start": "cd backend && npm start"
+  }
+}
